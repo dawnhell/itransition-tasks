@@ -112,6 +112,7 @@ module Faker
       # Load formatted strings from the locale, "parsing" them
       # into method calls that can be used to generate a
       # formatted translation: e.g., "#{first_name} #{last_name}".
+
       def parse(key)
         fetch(key).scan(/(\(?)#\{([A-Za-z]+\.)?([^\}]+)\}([^#]+)?/).map {|prefix, kls, meth, etc|
           # If the token had a class Prefix (e.g., Name.first_name)
@@ -125,7 +126,6 @@ module Faker
           # If the class has the method, call it, otherwise
           # fetch the transation (i.e., faker.name.first_name)
           text += cls.respond_to?(meth) ? cls.send(meth) : fetch("#{(kls || self).to_s.split('::').last.downcase}.#{meth.downcase}")
-
           # And tack on spaces, commas, etc. left over in the string
           text += etc.to_s
         }.join
@@ -148,15 +148,6 @@ module Faker
         I18n.translate(*(args.push(opts)))
       end
 
-      # Executes block with given locale set.
-      def with_locale(tmp_locale = nil)
-        current_locale = Faker::Config.own_locale
-        Faker::Config.locale = tmp_locale
-        I18n.with_locale(tmp_locale) { yield }
-      ensure
-        Faker::Config.locale = current_locale
-      end
-
       def flexible(key)
         @flexible_key = key
       end
@@ -177,12 +168,6 @@ module Faker
         end
       end
 
-      # Generates a random value between the interval
-      def rand_in_range(from, to)
-        from, to = to, from if to < from
-        rand(from..to)
-      end
-
       def unique(max_retries = 10_000)
         @unique_generator ||= UniqueGenerator.new(self, max_retries)
       end
@@ -191,15 +176,8 @@ module Faker
 end
 
 require 'faker/address'
-require 'faker/code'
 require 'faker/name'
 require 'faker/phone_number'
-
-require 'extensions/array'
-require 'extensions/symbol'
-
-require 'helpers/char'
-require 'helpers/unique_generator'
 
 #=============Starts here================#
 
@@ -256,7 +234,6 @@ counter.times do |i|
   street=Faker::Address.street_address
   zip=Faker::Address.zip
   phone=Faker::PhoneNumber.phone_number
-
 
   if(mistakeNumber >= counter)
     timesNumber.to_i.times do
