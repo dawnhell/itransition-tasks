@@ -1,0 +1,1 @@
+class LCS{public static void main(String[]a){String s="";for(String b:a){for(int c=b.length(),d=c,e,f=c;c>0;--d){for(e=-1;e+++d<c;){c=0;for(String g:a){c=g.contains(s=b.substring(e,e+d))?c:f;}}}}System.out.println(s);}}

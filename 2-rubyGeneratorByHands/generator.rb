@@ -10,6 +10,7 @@ def openLocaleFile fileName
 end
 
 locale=ARGV[0]
+puts locale
 counter=ARGV[1].to_i
 mistakeChance=ARGV[2] ? (ARGV[2].to_f >= 0 ? ARGV[2].to_f : (raise 'Number of mistakes must be positive.')) : 0
 mistakeNumber=mistakeChance*counter
@@ -18,15 +19,19 @@ timesNumber=(mistakeNumber/counter).to_i
 
 if locale=="ru_RU"
   country="Россия"
+  $sub="абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ0123456789"
   $addPrefix=", д."
 elsif locale=="by_BY"
   country="Беларусь"
+  $sub="АаБбВвГгДдЕеЁёЖжЗзІіЙйКкЛлМмНнОоПпРрСсТтУуЎўФфХхЦцЧчШшЫыЬьЭэЮюЯя0123456789"
   $addPrefix=", д."
 elsif locale=="en_US"
   country="Unates States"
+  $sub="abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ0123456789"
   $addPrefix=", fl."
 elsif locale=="en_GB"
  country="Great Britain"
+ $sub="abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ0123456789"
  $addPrefix=", h."
 end
 
@@ -49,7 +54,7 @@ end
 def mistakeString str
   #Uncomment to check the correctness of making mistakes
   #puts str + " -- mistake here"
-  cc=Random.rand(2)
+  cc=Random.rand(3)
   case cc
     when 0
       letter1=Random.rand(str.length)
@@ -59,13 +64,15 @@ def mistakeString str
       str[letter2]=temp
     when 1
       str[Random.rand(str.length)+1]=''
+    when 2
+      str.insert Random.rand(str.length), $sub[Random.rand($sub.length)]
   end
 
   return str
 end
 
-def chooseMistake name, state, city, street, phone
-  c=Random.rand(5)
+def chooseMistake name, state, city, street, phone, country
+  c=Random.rand(6)
   case c
     when 0
       name=mistakeString(name)
@@ -77,6 +84,8 @@ def chooseMistake name, state, city, street, phone
       street=mistakeString(street)
     when 4
       phone=mistakeString(phone)
+    when 5
+      country=mistakeString(country)
   end
 end
 
@@ -117,20 +126,21 @@ counter.times do |i|
   city=chooseCity
   street=chooseStreet
   phone=choosePhone
+  currentCountry=country
 
   if(mistakeNumber >= counter)
     timesNumber.to_i.times do
-      chooseMistake(name, state, city, street, phone)
+      chooseMistake(name, state, city, street, phone, currentCountry)
     end
     if(remainder>0)
-      chooseMistake(name, state, city, street, phone)
+      chooseMistake(name, state, city, street, phone, currentCountry)
       remainder=remainder-1
     end
   else
     if(i<mistakeNumber)
-      chooseMistake(name, state, city, street, phone)
+      chooseMistake(name, state, city, street, phone, currentCountry)
     end
   end
 
-  puts name + "; " + country + "; " + state + "; " + city + "; " + street + "; " + phone
+  puts name + "; " + currentCountry + "; " + state + "; " + city + "; " + street + "; " + phone
 end
