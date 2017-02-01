@@ -62,8 +62,8 @@ app.post('/users', function(req, res) {
                 var transporter = nodemailer.createTransport({
                     service: 'gmail',
                     auth: {
-                        user: 'kvladislavo2013@gmail.com',
-                        pass: 'nfkfkpiwwmusrrxx'
+                        user: 'YOUR EMAIL',
+                        pass: 'YOUR PASS'
                     }
                 });
                 userName = req.body.username;
