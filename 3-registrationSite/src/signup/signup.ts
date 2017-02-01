@@ -12,28 +12,39 @@ const template = require('./signup.html');
   styles: [ styles ]
 })
 export class Signup {
-  constructor(public router: Router, public http: Http) {
-  }
-
+  private userExists:  boolean = false;
+  private emailExists: boolean = false;
+  private isFull:      boolean = true;
+  constructor(public router: Router, public http: Http) {}
   signup(event, username, password, email) {
+    this.isFull = true;
+    this.userExists = false;
+    this.emailExists = false;
     event.preventDefault();
-    let body = JSON.stringify({ username, password, email });
-    this.http.post('http://localhost:3001/users', body, { headers: contentHeaders })
+    if (!username || !email || !password) {
+      this.isFull = false;
+    } else {
+      this.isFull = true;
+      let body = JSON.stringify({ username, password, email });
+      this.http.post('http://localhost:3001/users', body, { headers: contentHeaders })
       .subscribe(
-        response => {
-          localStorage.setItem('id_token', response.json().id_token);
-          this.router.navigate(['home']);
+        data => {
+          var obj = JSON.stringify(data);
+          var status = JSON.parse(obj)._body;
+          if (status === 'username') {
+            this.userExists = true;
+          } else {
+            if (status === 'email') {
+              this.emailExists = true;
+            } else {
+              this.router.navigate(['check']);
+            }
+          }
         },
         error => {
-          alert(error.text());
-          console.log(error.text());
+          console.log(error);
         }
       );
+    }
   }
-
-  login(event) {
-    event.preventDefault();
-    this.router.navigate(['login']);
-  }
-
 }

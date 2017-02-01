@@ -1,39 +1,20 @@
-var express = require('express'),
-    _       = require('lodash'),
-    config  = require('./config'),
-    jwt     = require('jsonwebtoken');
+var express     = require('express');
+var jwt         = require('jsonwebtoken');
 var bodyParser  = require('body-parser');
-
-var fs = require("fs");
-var app = module.exports = express.Router();
-const nodemailer = require('@nodemailer/pro');
-
+var fs          = require("fs");
+var app         = module.exports = express.Router();
+var nodemailer  = require('@nodemailer/pro');
+var userName    = null;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-
-// XXX: This should be a database of users :).
-/*var users = [{
-  id: 1,
-  username: 'gonto',
-  password: 'gonto'
-}];*/
-
 function createToken(user) {
-  var jwtToken = jwt.sign({ data: user }, 'superSecret', { expiresIn: '1h' });
-  return jwtToken;
-
-  /*var decode = jwt.decode(jwtToken);
-  console.log(decode.data);*/
+    var jwtToken = jwt.sign({ data: user }, 'superSecret', { expiresIn: '1h' });
+    return jwtToken;
 }
 
 app.post('/users', function(req, res) {
-  console.log("IN USERS" + __dirname);
-
-  if (!req.body.username || !req.body.password) {
-    return res.status(400).send("You must send the email, username and password");
-  }
   fs.readFile(__dirname + '/users.json',
     'utf8',
     function (err, data){
@@ -42,101 +23,138 @@ app.post('/users', function(req, res) {
       } else {
         var obj = JSON.parse(data);
 
-        var isHere = false;
-        for(var i = 0; i < obj.size; ++i) {
-          if(obj[i].users.username === req.body.username) {
-            isHere = true;
+        var isEmail = false;
+        for(var i = 0; i < obj.users.length; ++i) {
+            if(obj.users[i].email === req.body.email) {
+                isEmail = true;
+                break;
+            }
+        }
+
+        var isUsername = false;
+        for(var i = 0; i < obj.users.length; ++i) {
+          if(obj.users[i].username === req.body.username) {
+              isUsername = true;
             break;
           }
         }
-        if (isHere) {
-          return res.status(400).send("A user with that username already exists");
+
+        if(isEmail) {
+            res.send('email');
+        } else{
+            if(isUsername) {
+                res.send('username');
+            } else {
+                var newUser = {
+                    "username": req.body.username,
+                    "password": req.body.password,
+                    "email": req.body.email,
+                    "verified": "false"
+                };
+                obj.users.push(newUser);
+                var json = JSON.stringify(obj);
+                fs.writeFile(__dirname + '/users.json',
+                    json,
+                    'utf8',
+                    function () { console.log("User was added."); }
+                );
+
+                var transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: 'kvladislavo2013@gmail.com',
+                        pass: 'nfkfkpiwwmusrrxx'
+                    }
+                });
+                userName = req.body.username;
+                var userEmail = req.body.email;
+                var userToken = createToken(req.body.username);
+                var tokenLink = "http://localhost:3001/users/verify?q=" + createToken(req.body.username);
+
+                var mailOptions = {
+                    from: '<kvladislavo2013@gmail.com>',
+                    to: userEmail,
+                    subject: 'Verification',
+                    text: 'Confirm email, please.',
+                    html: 'Click here: <a href="' + tokenLink + '">' + tokenLink + '</a>'
+                };
+
+                transporter.sendMail(mailOptions, function(error, info) {
+                   if (error) {
+                   return console.log(error);
+                   }
+                   console.log('Message %s sent: %s', info.messageId, info.response);
+                });
+                res.send();
+            }
         }
-        isHere = false;
-        for(var i = 0; i < obj.users.size; ++i) {
-          if(obj.users[i].email === req.body.email) {
-            isHere = true;
-            break;
-          }
-        }
-        if (isHere) {
-          return res.status(400).send("A user with that email already exists");
-        }
-        var newUser = {
-          "username": req.body.username,
-          "password": req.body.password,
-          "email": req.body.email
-        };
-        obj.users.push(newUser);
-        var json = JSON.stringify(obj);
-        fs.writeFile(__dirname + '/users.json',
-          json,
-          'utf8',
-          function () { console.log("User was added."); }
-        );
       }});
-
-  var transporter = nodemailer.createTransport({
-   /*pool: true,
-     host: 'smtp.gmail.com',
-     port: 587,
-     secure: true, // use TLS
-     auth: {
-     user: 'vlad.klochkov.new@gmail.com',
-     pass: 'kvo98_new'
-     }*/
-
-    service: 'gmail',
-    auth: {
-      user: 'kvladislavo2013@gmail.com',
-      pass: 'nfkfkpiwwmusrrxx'
-    }
-  });
-
-  var userEmail = req.body.email;
-  var userToken = createToken(req.body.username);
-  var tokenLink = "localhost:3001/users/verify?q=" + createToken(req.body.username);
-
-  var mailOptions = {
-    from: '<kvladislavo2013@gmail.com>',
-    to: userEmail,
-    subject: 'Verification',
-    text: 'Confirm email, please.',
-    html: "Click this:\n <a href=" + tokenLink + ">" + tokenLink + "</a>"
-  };
-
-  transporter.sendMail(mailOptions, function(error, info) {
-    if (error) {
-      return console.log(error);
-    }
-    console.log('Message %s sent: %s', info.messageId, info.response);
-  });
-
-  res.status(201).send({
-    /*id_token: createToken(profile)*/
-  });
 });
 
-app.get('/users/verify/', function(req, res) {
-  console.log(req.originalUrl);
+app.get('/users/verify', function(req, res) {
+  var decode = jwt.decode(req.query.q);
+  if(userName == decode.data) {
+    fs.readFile(__dirname + '/users.json',
+      'utf8',
+      function (err, data) {
+        if (err) {
+          console.log(err);
+        } else {
+          var obj = JSON.parse(data);
+          for (var i = 0; i < obj.users.length; ++i) {
+            if (obj.users[i].username === userName) {
+              obj.users[i].verified = "true";
+              break;
+            }
+          }
+          var json = JSON.stringify(obj);
+          fs.writeFile(__dirname + '/users.json',
+            json,
+            'utf8',
+            function () { console.log("User was verified."); }
+          );
+        }
+      }
+    );
+    res.sendFile(__dirname + '/redirect.html');
+  } else {
+      console.log("Do not even hope!");
+  }
 });
 
 app.post('/sessions/create', function(req, res) {
-  console.log("HEHE");
-  if (!req.body.username || !req.body.password) {
-    return res.status(400).send("You must send the username and the password");
-  }
-  var user = _.find(users, {username: req.body.username});
-  if (!user) {
-    return res.status(401).send("The username or password don't match");
-  }
+  fs.readFile(__dirname + '/users.json',
+    'utf8',
+    function (err, data){
+      if (err){
+        console.log(err);
+      } else {
+        var matched  = false;
+        var verified = 'false';
+        var obj = JSON.parse(data);
+        for(var i = 0; i < obj.users.length; ++i) {
+          if(obj.users[i].username === req.body.username && obj.users[i].password === req.body.password) {
+            matched = true;
+            verified = obj.users[i].verified.toString();
+          }
+        }
+        if(matched) {
+          if(verified == 'false') {
+            res.send('unverified');
+          } else {
+            if(verified == 'true') {
+              res.send(true);
+            }
+          }
+        } else {
+          res.send(false);
+        }
+      }
+    }
+  );
+});
 
-  if (!(user.password === req.body.password)) {
-    return res.status(401).send("The username or password don't match");
-  }
-
-  res.status(201).send({
-    id_token: createToken(user)
-  });
-
+app.get('/logout', function(req, res) {
+  userName = null;
+  res.send();
 });

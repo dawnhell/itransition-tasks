@@ -1,3 +1,23 @@
-.red {
-  color: red;
+.home {
+    margin: 20px auto;
+    text-align: center;
+    font-size: 24px;
+}
+
+.construction {
+    width: 100%;
+    padding: 50px 0;
+    margin: 0 auto;
+    line-height: 1.6em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.construction h2 {
+    font-size: 60px;
+}
+
+.construction span {
+    display: block;
+    font-size: 32px;
 }

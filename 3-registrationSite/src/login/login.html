@@ -13,6 +13,15 @@
           <label for="password">Password</label>
           <input type="password" #password class="form-control" id="password" placeholder="Password">
         </div>
+        <div class="alert alert-danger" *ngIf="!isMatched">
+          Username or password doesn't match.
+        </div>
+        <div class="alert alert-danger" *ngIf="!isVerified">
+          You are not verified. Please, check your email.
+        </div>
+        <div class="alert alert-danger" *ngIf="!isFull">
+          Please, fill all the filds.
+        </div>
         <button type="submit" class="btn btn-primary">Submit</button>
         <a [routerLink]="['/signup']">Click here to Signup</a>
       </form>

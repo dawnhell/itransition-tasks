@@ -19,16 +19,16 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use(function(err, req, res, next) {
-  if (err.name === 'StatusError') {
-    res.send(err.status, err.message);
-  } else {
-    next(err);
-  }
+    if (err.name === 'StatusError') {
+        res.send(err.status, err.message);
+    } else {
+        next(err);
+    }
 });
 
 if (process.env.NODE_ENV === 'development') {
-  app.use(express.logger('dev'));
-  app.use(errorhandler())
+    app.use(express.logger('dev'));
+    app.use(errorhandler())
 }
 
 app.use(require('./anonymous-routes'));
@@ -38,6 +38,5 @@ app.use(require('./user-routes'));
 var port = process.env.PORT || 3001;
 
 http.createServer(app).listen(port, function (err) {
-  console.log('listening in http://localhost:' + port);
+    console.log('listening in http://localhost:' + port);
 });
-

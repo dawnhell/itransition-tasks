@@ -1,0 +1,12 @@
+.check {
+  width: 400px;
+  margin: 20px auto;
+}
+.check h3 {
+    color: slategrey;
+    font-size: 18px;
+}
+.check a {
+    padding: 10px 20px;
+    font-size: 18px;
+}

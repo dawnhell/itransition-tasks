@@ -10,6 +10,7 @@ import { AuthGuard } from './common/auth.guard';
 import { Home } from './home';
 import { Login } from './login';
 import { Signup } from './signup';
+import { Check } from './check';
 import { App } from './app';
 
 import { routes } from './app.routes';
@@ -17,16 +18,16 @@ import { routes } from './app.routes';
 @NgModule({
   bootstrap: [App],
   declarations: [
-    Home, Login, Signup, App
+    Home, Login, Signup, Check, App
   ],
   imports: [
     HttpModule, BrowserModule, FormsModule,
-    RouterModule.forRoot(routes, {
+    RouterModule.forRoot(routes/*, {
       useHash: true
-    })
+    }*/)
   ],
   providers: [
-    AuthGuard, ...AUTH_PROVIDERS
+    /*AuthGuard, ...AUTH_PROVIDERS*/
   ]
 })
 export class AppModule {}

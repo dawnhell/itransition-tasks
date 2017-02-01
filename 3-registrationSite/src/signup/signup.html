@@ -17,7 +17,17 @@
           <label for="password">Password</label>
           <input type="password" #password class="form-control" id="password" placeholder="Password">
         </div>
+        <div class="alert alert-danger" *ngIf="userExists">
+            User with this username already exists.
+        </div>
+        <div class="alert alert-danger" *ngIf="emailExists">
+            User with this email already exists.
+        </div>
+        <div class="alert alert-danger" *ngIf="!isFull">
+          Please, fill all the filds.
+        </div>
         <button type="submit" class="btn btn-primary">Submit</button>
+        <a [routerLink]="['/login']">Click here to Login</a>
       </form>
     </div>
   </div>

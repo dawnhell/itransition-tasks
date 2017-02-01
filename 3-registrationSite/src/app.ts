@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 const template = require('./app.html');
 
 @Component({
-  selector: 'auth-app',
-  template: template
+    selector: 'auth-app',
+    template: template
 })
 
 export class App {
