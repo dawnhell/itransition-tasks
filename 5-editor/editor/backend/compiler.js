@@ -50,13 +50,19 @@ function init_targets(){
       temp_stack.push(i);
     }
     if (op == ']'){
-      if (temp_stack.length == 0) alert('Parseing error: ] with no matching [');
+      if (temp_stack.length == 0) {
+        alert('Parseing error: ] with no matching [');
+        isDone = true;
+      }
       var target = temp_stack.pop();
       g_targets[i] = target;
       g_targets[target] = i;
     }
   }
-  if (temp_stack.length > 0) alert('Parseing error: [ with no matching ]');
+  if (temp_stack.length > 0) {
+    alert('Parseing error: [ with no matching ]');
+    isDone = true;
+  }
 }
 function init_input(){
   g_prompt_for_input = document.getElementById('input_mode_1').checked;
