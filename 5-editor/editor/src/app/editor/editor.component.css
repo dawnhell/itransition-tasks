@@ -1,0 +1,145 @@
+.editor {
+  padding-left: 0;
+  height: 100vh;
+}
+
+.editor-files {
+  position: relative;
+  height: 100%;
+  padding-top: 50px;
+  border-right: 4px solid #888888;
+}
+
+.editor-field {
+  
+}
+
+.editor-output {
+  position: absolute;
+  overflow: hidden;
+  padding-top: 50px;
+  border-left: 4px solid #888888;
+  height: 100%;
+}
+
+.mainform {
+  overflow-y: auto;
+  height: 100%;
+}
+
+.file-heading {
+  margin: 0;
+  padding: 20px 15px 0;
+  font-weight: 500;
+  color: #999;
+  font-size: 18px;
+}
+
+.file-list {
+  
+}
+
+.file-link {
+  
+}
+
+.file-link:hover {
+  background: #eee;
+  text-decoration: none;
+}
+
+.active {
+  background: #d9edf7;
+}
+
+.file-control {
+  position: absolute;
+  bottom: 0;
+}
+
+.file {
+  font-size: 16px;
+  padding: 5px 10px;
+}
+
+.file:hover {
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+
+#ace-editor {
+  position: absolute;
+  top: 54px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  font-size: 15px;
+}
+
+.run-btn {
+  margin: 0 5px;
+}
+
+.save-btn {
+  margin: 0 5px;
+}
+
+.create-btn {
+  margin: 5px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+
+.remove-btn {
+  margin: 5px;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+
+.file-control .btn-group {
+  margin: 0 15px;
+}
+
+.debug-buttons {
+  margin: 10px 100px 0;
+}
+
+.debug-btn {
+  
+}
+
+.debug-text {
+  margin: 10px 20px;
+}
+
+.output-text {
+  margin: 0 20px;
+}
+
+.input-text {
+  margin: 0 20px;
+}
+
+.input-text-row {
+  margin: 0;
+}
+
+.viewer {
+  border: 1px solid #888888;
+  min-height: 30px;
+}
+
+.sourse-view {
+  margin: 0 40px;
+}
+
+.output-view {
+  margin: 0 40px;
+}
+
+.memory-view {
+  margin: 0 40px;
+}

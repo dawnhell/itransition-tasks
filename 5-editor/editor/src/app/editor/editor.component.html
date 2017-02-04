@@ -1,0 +1,246 @@
+<nav class="navbar navbar-toggleable-md fixed-top navbar-light bg-faded">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <h1 class="navbar-brand mb-0">Brainfuck editor</h1>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <button type="submit"
+                class="btn btn-outline-success save-btn"
+                (click)="onSave()">
+          <i class="fa fa-floppy-o" aria-hidden="true"></i>
+          Save
+        </button>
+      </li>
+      <li class="nav-item">
+        <button type="button"
+                id="button_run"
+                class="btn btn-outline-primary run-btn"
+                (click)="onRun(myForm)"
+                value="Run">
+          <i class="fa fa-play" aria-hidden="true"></i>
+          Run
+        </button>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<div class="editor container-fluid">
+  <div class="row" style="height: 100%;">
+    <div class="col-md-2" style="padding-right: 0;">
+      <div class="editor-files">
+        <div class="file-list">
+          <p class="lead file-heading">Files</p>
+          <ul class="nav flex-column">
+            <li class="nav-item"
+                *ngFor="let file of files">
+              <a href="/"
+                 onclick="return false"
+                 class="nav-link file-link"
+                 [class.active]="isSelected(file)"
+                 (click)="onClick(file)"
+                 ondblclick="$('#renameFileModal').modal('show')">
+                {{file.file}}
+              </a>
+            </li>
+          </ul>
+          <p style="padding: 20px 15px; color: #999; font-size: 14px;">Double click for rename</p>
+          <div class="modal fade"
+               id="renameFileModal"
+               tabindex="-1"
+               role="dialog"
+               aria-labelledby="createFileLabel"
+               aria-hidden="true" style="position: fixed;">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="renameFileLabel">Rename file</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <label for="fileName">Enter new file name</label>
+                  <input type="text"
+                         class="form-control"
+                         id="newFileName"
+                         placeholder="newfilename.b"
+                         #newFileName>
+                  <div class="alert alert-danger" *ngIf="isFull">
+                    Please, fill the file name.
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button"
+                          class="btn btn-secondary"
+                          data-dismiss="modal">
+                    Close
+                  </button>
+                  <button type="button"
+                          class="btn btn-primary"
+                          (click)="onRename(newFileName.value)"
+                          data-dismiss="modal">
+                    Rename
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="file-control">
+          <div class="btn-group">
+            <button type="button"
+                    class="btn btn-outline-primary create-btn"
+                    data-toggle="modal"
+                    data-target="#createFile"
+                    onclick="$('#createFileModal').modal('show')">
+              <i class="fa fa-plus" aria-hidden="true"></i>
+            </button>
+            <button type="button"
+                    class="btn btn-outline-danger remove-btn"
+                    (click)="onRemoveFile()">
+              <i class="fa fa-minus" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="modal fade"
+               id="createFileModal"
+               tabindex="-1"
+               role="dialog"
+               aria-labelledby="createFileLabel"
+               aria-hidden="true" style="position: fixed;">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="createFileLabel">Create file</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <label for="fileName">Enter file name</label>
+                  <input type="text"
+                         class="form-control"
+                         id="fileName"
+                         placeholder="filename.b"
+                         #fileName>
+                  <div class="alert alert-danger" *ngIf="isFull">
+                    Please, fill the file name.
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button"
+                          class="btn btn-secondary"
+                          data-dismiss="modal">
+                    Close
+                  </button>
+                  <button type="button"
+                          class="btn btn-primary"
+                          (click)="onCreateFile(fileName.value)"
+                          data-dismiss="modal">
+                    Create
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="editor-field">
+        <div id="ace-editor">
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="editor-output">
+        <form #myForm
+              name="mainform"
+              id="mainform"
+              class="mainform">
+          <textarea id="edit_source" name="source" wrap="virtual" class="edit" style="position: absolute; right: 99999px;"></textarea>
+          <div class="form-group row debug-text">
+            <div class="output-text">
+              <p class="lead">Output</p>
+              <textarea id="edit_output"
+                        name="output"
+                        wrap="virtual"
+                        class="editsmall"
+                        cols="25"
+                        rows="4"
+                        style="outline: none; margin-top: 18px;">
+              </textarea>
+            </div>
+            <div class="input-text">
+              <div class="row input-text-row">
+                <p class="lead">Input</p>
+                <div>
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input type="radio" id="input_mode_1" name="input_mode" value="1" onclick="sync_input();">
+                      Prompt for input
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input type="radio" id="input_mode_2" name="input_mode" value="2" onclick="sync_input();" checked>
+                      Pre-supply input:
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <textarea id="edit_input"
+                        name="input"
+                        wrap="virtual"
+                        class="editsmall"
+                        cols="25"
+                        rows="4"
+                        style="outline: none;">
+              </textarea>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="btn-group debug-buttons" role="group" aria-label="Debug buttons">
+              <input type="button"
+                     class="btn btn-primary debug-btn"
+                     value="Start Debugger"
+                     (click)="onDebug(myForm)"
+                     id="button_debug">
+              <input type="button"
+                     class="btn btn-primary debug-btn"
+                     value="Single Step"
+                     onclick="run_step();"
+                     disabled
+                     id="button_step">
+              <input type="button"
+                     class="btn btn-primary debug-btn"
+                     value="Run To Breakpoint"
+                     onclick="run_debug();"
+                     disabled
+                     id="button_run_debug">
+            </div>
+          </div>
+          <p style="margin: 0 40px;"><b>Note:</b> The hash ("#") character marks a breakpoint.</p>
+
+          <div class="form-group sourse-view">
+              <p class="lead">Sourse viewer</p>
+              <pre class="viewer" id="progview"> </pre>
+          </div>
+          <div class="form-group output-view">
+            <p class="lead">Output viewer</p>
+            <pre class="viewer" id="outputview"> </pre>
+          </div>
+          <div class="form-group memory-view">
+            <p class="lead">Memory viewer</p>
+            <p class="viewer" id="memview"> </p>
+          </div>
+
+          <pre class="viewer" id="inputview" style="position: absolute; right: 9999px;"> </pre>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

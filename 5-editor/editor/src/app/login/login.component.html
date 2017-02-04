@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="login">
+    <div class="card">
+      <div class="card-header">
+        <h2>Login</h2>
+      </div>
+      <div class="card-block">
+        <form role="form" (submit)="login($event, username.value, password.value)">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" #username class="form-control" id="username" placeholder="Username">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" #password class="form-control" id="password" placeholder="Password">
+          </div>
+          <div class="alert alert-danger" *ngIf="!isMatched">
+            Wrong username or password.
+          </div>
+          <div class="alert alert-danger" *ngIf="!isFull">
+            Please, fill all the filds.
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <a [routerLink]="['/signup']">Click here to Signup</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
