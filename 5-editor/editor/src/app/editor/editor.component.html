@@ -47,7 +47,7 @@
             </li>
           </ul>
           <p style="padding: 20px 15px; color: #999; font-size: 14px;">Double click for rename</p>
-          <div class="modal fade"
+          <div class="modal"
                id="renameFileModal"
                tabindex="-1"
                role="dialog"
@@ -104,7 +104,7 @@
               <i class="fa fa-minus" aria-hidden="true"></i>
             </button>
           </div>
-          <div class="modal fade"
+          <div class="modal"
                id="createFileModal"
                tabindex="-1"
                role="dialog"
@@ -148,98 +148,268 @@
         </div>
       </div>
     </div>
-    <div class="col-md-4">
+    <div class="col-md-5" style="padding: 0;">
       <div class="editor-field">
-        <div id="ace-editor">
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="editor-output">
-        <form #myForm
-              name="mainform"
-              id="mainform"
-              class="mainform">
-          <textarea id="edit_source" name="source" wrap="virtual" class="edit" style="position: absolute; right: 99999px;"></textarea>
-          <div class="form-group row debug-text">
-            <div class="output-text">
-              <p class="lead">Output</p>
-              <textarea id="edit_output"
-                        name="output"
-                        wrap="virtual"
-                        class="editsmall"
-                        cols="25"
-                        rows="4"
-                        style="outline: none; margin-top: 18px;">
+        <div style="overflow-y: auto; height: 100%;">
+          <div id="ace-editor">
+          </div>
+          <div class="editor-output">
+            <form #myForm
+                  name="mainform"
+                  id="mainform"
+                  class="mainform">
+              <textarea id="edit_source" name="source" wrap="virtual" class="edit" style="position: absolute; right: 99999px;"></textarea>
+              <div class="form-group row debug-text">
+                <div class="output-text">
+                  <p class="lead">Output</p>
+                  <textarea id="edit_output"
+                            name="output"
+                            wrap="virtual"
+                            class="editsmall"
+                            cols="25"
+                            rows="3"
+                            style="outline: none;">
               </textarea>
-            </div>
-            <div class="input-text">
-              <div class="row input-text-row">
-                <p class="lead">Input</p>
-                <div>
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <input type="radio" id="input_mode_1" name="input_mode" value="1" onclick="sync_input();">
-                      Prompt for input
-                    </label>
+                </div>
+                <div class="input-text" style="display: none;">
+                  <div class="row input-text-row">
+                    <p class="lead">Input</p>
+                    <div>
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input type="radio" id="input_mode_1" name="input_mode" value="1" onclick="sync_input();" checked>
+                          Prompt for input
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <label class="form-check-label">
+                          <input type="radio" id="input_mode_2" name="input_mode" value="2" onclick="sync_input();">
+                          Pre-supply input:
+                        </label>
+                      </div>
+                    </div>
                   </div>
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <input type="radio" id="input_mode_2" name="input_mode" value="2" onclick="sync_input();" checked>
-                      Pre-supply input:
-                    </label>
+                  <textarea id="edit_input"
+                            name="input"
+                            wrap="virtual"
+                            class="editsmall"
+                            cols="20"
+                            rows="4"
+                            style="outline: none;">
+              </textarea>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="btn-group debug-buttons" role="group" aria-label="Debug buttons">
+                  <input type="button"
+                         class="btn btn-primary debug-btn"
+                         value="Start Debugger"
+                         (click)="onDebug(myForm)"
+                         id="button_debug">
+                  <input type="button"
+                         class="btn btn-primary debug-btn"
+                         value="Single Step"
+                         onclick="run_step();"
+                         disabled
+                         id="button_step">
+                  <input type="button"
+                         class="btn btn-primary debug-btn"
+                         value="Run To Breakpoint"
+                         onclick="run_debug();"
+                         disabled
+                         id="button_run_debug">
+                </div>
+              </div>
+              <p style="margin: 0 0 0 40px;"><b>Note:</b> The hash ("#") character marks a breakpoint.</p>
+
+              <div class="form-group sourse-view" style="width: 80%;">
+                <p class="lead">Sourse viewer</p>
+                <pre class="viewer" id="progview"> </pre>
+              </div>
+              <pre class="viewer" id="outputview" style="position: absolute; right: 9999px;"> </pre>
+              <p class="viewer" id="memview" style="position: absolute; right: 9999px;"> </p>
+
+              <pre class="viewer" id="inputview" style="position: absolute; right: 9999px;"> </pre>
+            </form>
+
+            <div class="modal"
+                 id="inputFileModal"
+                 tabindex="-1"
+                 role="dialog"
+                 aria-labelledby="inputFileLabel"
+                 aria-hidden="true" style="position: fixed;">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="inputFileLabel">Input</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <label for="characterInput">Enter an input character</label>
+                    <input type="text"
+                           class="form-control"
+                           id="characterInput"
+                           placeholder="a">
+                    <label for="codeInput">Or the code of the character</label>
+                    <input type="text"
+                           class="form-control"
+                           id="codeInput"
+                           placeholder="97">
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-dismiss="modal">
+                      Close
+                    </button>
+                    <button type="button"
+                            class="btn btn-primary"
+                            id="inputButton"
+                            data-dismiss="modal">
+                      Enter
+                    </button>
                   </div>
                 </div>
               </div>
-              <textarea id="edit_input"
-                        name="input"
-                        wrap="virtual"
-                        class="editsmall"
-                        cols="25"
-                        rows="4"
-                        style="outline: none;">
-              </textarea>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-5" style="padding-left: 0; padding-right: 0; overflow: hidden;">
+      <div class="hex-editor" style="overflow-y: auto; overflow-x: hidden; height: 100%;">
+        <p class="lead text-center" style="font-size: 22px; padding-top: 10px; margin: 0; font-weight: 400;">Hex editor</p>
+        <p class="text-center" style="font-size: 18px; color: #999;">Select and edit</p>
+        <div id="content">
+          <div id="realContent">
+            <div id="col1" style="display: none;">
+              <div class="inspectorCont">
+                <div class="inspectorTitle">Inspector:</div>
+                <div class="subContent">
+                  <div class="inspectorSubtitle">View/Edit</div>
+                  <div class="inspectorContent">
+                    <div class="inspectorLabel">Decimal:</div>
+                    <div class="inspectorField">
+                      <input type="number" step="1" min="0" max="255" id="editDecimal" class="decimal" onblur="onDecimalEditChange();"/>
+                    </div>
+                  </div>
+                  <div class="inspectorContent">
+                    <div class="inspectorLabel">Hexa:</div>
+                    <div class="inspectorField">
+                      <select id="editUpperHexa" dir="rtl" class="upperHexa">
+                        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
+                        <option value="8">8</option><option value="9">9</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option>
+                      </select>
+                      <select id="editLowerHexa" class="lowerHexa" >
+                        <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
+                        <option value="8">8</option><option value="9">9</option><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option><option value="F">F</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="inspectorContent">
+                    <div class="inspectorLabel">Binary:</div>
+                    <div class="inspectorField">
+                      <input type="radio" id="editBin0" name="editBin0"/><input type="radio" id="editBin1" name="editBin1"/><input type="radio" id="editBin2" name="editBin2"/><input type="radio" id="editBin3" name="editBin3"/><input type="radio" id="editBin4" name="editBin4"/><input type="radio" id="editBin5" /><input type="radio" id="editBin6"/><input type="radio" id="editBin7"/>
 
-          <div class="form-group">
-            <div class="btn-group debug-buttons" role="group" aria-label="Debug buttons">
-              <input type="button"
-                     class="btn btn-primary debug-btn"
-                     value="Start Debugger"
-                     (click)="onDebug(myForm)"
-                     id="button_debug">
-              <input type="button"
-                     class="btn btn-primary debug-btn"
-                     value="Single Step"
-                     onclick="run_step();"
-                     disabled
-                     id="button_step">
-              <input type="button"
-                     class="btn btn-primary debug-btn"
-                     value="Run To Breakpoint"
-                     onclick="run_debug();"
-                     disabled
-                     id="button_run_debug">
+                    </div>
+                  </div>
+                </div>
+                <div class="subContent">
+                  <div class="inspectorSubtitle">Search Sequence/s</div>
+                  <div class="inspectorContent">
+                    <div class="inspectorLabel">Type:</div>
+                    <div class="inspectorField">
+                      <select id="searchTextType" onchange="onSearchTypeChange();">
+                        <option value="Decimal" selected="selected">Decimal</option>
+                        <option value="Hexa">Hexa</option>
+                        <option value="Char">Char</option>
+                        <option></option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="inspectorContent">
+                    <div class="inspectorLabel"  id="labelSearch">Decimals:</div>
+                    <div class="inspectorField">
+                      <input type="text"  id="searchText" class="char" placeholder="Enter like: this 1 2 44"/>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="inspectorLabel"><span class="bold">or </span>Address:</div>
+                    <div class="inspectorField">
+                      <input type="text" id="address" class="char" placeholder="Enter like: 000000f0" maxlength="8" />
+                    </div>
+                  </div>
+                  <div class="searchButtonDiv">
+                    <button onclick="Search();">Search</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row" style="padding-top: 20px; margin: 0 20px;">
+              <div class="col-md-2 memory-number">
+                <div id="offsetcol">
+                </div>
+              </div>
+              <div class="col-md-10">
+                <div class="column-number">
+                  <span id="column-number">0</span>
+                  <span id="column-number">1</span>
+                  <span id="column-number">2</span>
+                  <span id="column-number">3</span>
+                  <span id="column-number">4</span>
+                  <span id="column-number">5</span>
+                  <span id="column-number">6</span>
+                  <span id="column-number">7</span>
+                  <span id="column-number">8</span>
+                  <span id="column-number">9</span>
+                  <span id="column-number">A</span>
+                  <span id="column-number">B</span>
+                  <span id="column-number">C</span>
+                  <span id="column-number">D</span>
+                  <span id="column-number">E</span>
+                  <span id="column-number">F</span>
+                </div>
+                <div class="hex-values">
+                  <div id="hexcol" tabIndex="-1">
+                  </div>
+                </div>
+              </div>
+              <div id="asciicol" style="display: none;">
+              </div>
+              <div id="scrollcol" style="display: none;">
+                <div id="slider-vertical" style="height: 320px;" class="noUiSlider"></div>
+              </div>
+            </div>
+            <div id="col3" style="display: none;">
+              <div class="inspectorCont">
+                <div class="inspectorTitle">Offset</div>
+                <div class="subContent">
+                  <div class="offsetContent">
+                    <div class="offsetRow">
+                      <div class="offsetLabel">Decimal:</div>
+                      <div class="offsetField"><input type="text" id="offsetDecimal"  value="0"  class="offset"  onchange="GoToAddressDecimal();"/></div>
+                    </div>
+                    <div class="offsetRow">
+                      <div class="offsetLabel">Hexa:</div>
+                      <div class="offsetField">
+                        <input type="text" id="offsetHexa"  value="0x0"  class="offset"  onchange="GoToAddressHexa();"/>
+                      </div>
+                    </div>
+                    <div class="offsetRow">
+                      <div  class="offsetLabel">Percent:</div>
+                      <div class="offsetField">
+                        <input type="text" id="offsetPercent"  value="0%"  class="offset" onchange="GoToAddressPercent();"/>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <p style="margin: 0 40px;"><b>Note:</b> The hash ("#") character marks a breakpoint.</p>
-
-          <div class="form-group sourse-view">
-              <p class="lead">Sourse viewer</p>
-              <pre class="viewer" id="progview"> </pre>
-          </div>
-          <div class="form-group output-view">
-            <p class="lead">Output viewer</p>
-            <pre class="viewer" id="outputview"> </pre>
-          </div>
-          <div class="form-group memory-view">
-            <p class="lead">Memory viewer</p>
-            <p class="viewer" id="memview"> </p>
-          </div>
-
-          <pre class="viewer" id="inputview" style="position: absolute; right: 9999px;"> </pre>
-        </form>
+        </div>
       </div>
     </div>
   </div>

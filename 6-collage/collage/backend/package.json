@@ -1,0 +1,16 @@
+{
+  "name": "editor-server",
+  "version": "0.0.1",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "compression": "^1.6.1",
+    "cors": "^2.7.1",
+    "dotenv": "^0.4.0",
+    "errorhandler": "^1.4.3",
+    "express": "^4.13.4",
+    "body-parser": "^1.15.2"
+  }
+}

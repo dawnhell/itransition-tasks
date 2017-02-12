@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import {Http} from "@angular/http";
 import {contentHeaders} from "../common/headers";
 
-declare function runAce(file);
+declare function runAce(fileName, code);
 declare function destroyAce();
 declare function getCurrentCode();
 declare function run(f);
 declare function bf_stop_run();
 declare function debug_toggle(f);
 declare function isRunning();
+declare function runHexEditor();
 
 export interface File {
   id: String;
@@ -40,7 +41,8 @@ export class EditorComponent implements OnInit {
         var temp = JSON.stringify(data);
         var code = JSON.parse(temp)._body;
         destroyAce();
-        runAce(code);
+        runAce(file.file, code);
+        runHexEditor();
       },
       error => console.log(error)
     );
@@ -51,7 +53,16 @@ export class EditorComponent implements OnInit {
       .subscribe(
         data => {
           this.files = data.json();
-          this.onClick(this.files[0]);
+          if (!this.selectedFile) {
+            this.onClick(this.files[1]);
+          } else {
+            for(var i in this.files) {
+              if (this.files[i].file === this.selectedFile.file) {
+                this.onClick(this.files[i]);
+                break;
+              }
+            }
+          }
         },
         error => console.log(error)
       );
@@ -105,6 +116,7 @@ export class EditorComponent implements OnInit {
   onDebug(form: any) {
     let textArea = document.getElementById('edit_source');
     textArea.innerText = getCurrentCode();
+    console.log(getCurrentCode());
     debug_toggle(form);
   }
   
@@ -115,6 +127,7 @@ export class EditorComponent implements OnInit {
     .subscribe(
       data => {
         console.log("File has been saved.");
+        this.ngOnInit();
       },
       error => console.log(error)
     );

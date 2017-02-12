@@ -73,25 +73,36 @@ function init_input(){
   }
   g_dp = 0;
 }
+
+function getModalInput() {
+  var character = document.getElementById('characterInput').value;
+
+  return character;
+}
+
+function setInputListner() {
+  var character = document.getElementById('characterInput');
+  var code = document.getElementById('codeInput');
+
+  character.addEventListener('input', function() {
+    if(character.value) {
+      code.value = character.value.charCodeAt(0);
+    }
+  });
+
+  code.addEventListener('input', function() {
+    if(code.value) {
+      character.value = String.fromCharCode(code.value);
+    }
+  });
+}
+
 function get_input(){
-  if (g_prompt_for_input){
-    var data = window.prompt("Enter an input character (use #xxx to specify a decimal code, !xxx for an octal code, or $xxx for a hex code):", "#0");
-    if ((data == null) || (!data)) return 0;
-    if (data.charAt(0) == '#'){
-      return parseInt(data.substr(1), 10);
-    }
-    if (data.charAt(0) == '!'){
-      return eval('0'+data.substr(1));
-    }
-    if (data.charAt(0) == '$'){
-      return eval('0x'+data.substr(1));
-    }
-    return data.charCodeAt(0);
-  }else{
-    var result = (g_dp >= g_input.length)?0:g_input[g_dp].charCodeAt(0);
-    g_dp++;
-    return result;
-  }
+  // $('#inputFileModal').modal('show');
+  // setInputListner();
+  // $('#inputButton').click(function () {
+  //   g_memory[g_mp] = $('#codeInput').val();
+  // });
 }
 function is_valid_op(op){
   if (op == '+') return 1;
@@ -134,9 +145,6 @@ function execute_opcode(op){
       break;
     case '.':
       put_output(String.fromCharCode(g_memory[g_mp]));
-      break;
-    case ',':
-      g_memory[g_mp] = get_input();
       break;
   }
 }
@@ -185,14 +193,30 @@ function isRunning() {
 function bf_run_step(){
   // execute instrcution under ip
   var op = g_program[g_ip];
-  execute_opcode(op);
-  // increment ip
-  g_ip++;
-  if (g_ip >= g_program.length){
-    bf_run_done();
-    return;
+  if(op == ',') {
+    $('#inputFileModal').modal('show');
+    setInputListner();
+    $('#inputButton').click(function () {
+      console.log($('#characterInput').val().charCodeAt(0));
+      g_memory[g_mp] = $('#characterInput').val().charCodeAt(0);
+
+      g_ip++;
+      if (g_ip >= g_program.length){
+        bf_run_done();
+        return;
+      }
+      window.setTimeout('bf_run_step();', 0);
+    });
+  } else {
+    execute_opcode(op);
+    // increment ip
+    g_ip++;
+    if (g_ip >= g_program.length){
+      bf_run_done();
+      return;
+    }
+    window.setTimeout('bf_run_step();', 0);
   }
-  window.setTimeout('bf_run_step();', 0);
 }
 function update_memview(){
   var lines = [];
@@ -308,6 +332,7 @@ function run(f){
 function debug_done(){
   disable_button('button_step');
   disable_button('button_run_debug');
+  document.getElementById('edit_output').value = g_output;
 }
 function debug_toggle(f){
   isDone = false;
@@ -355,16 +380,33 @@ function start_debugger(){
 }
 function run_step(){
   var op = g_program[g_ip];
-  execute_opcode(op);
-  g_ip++;
-  update_memview();
-  update_progview();
-  update_inputview();
-  update_outputview();
+  if(op == ',') {
+    $('#inputFileModal').modal('show');
+    setInputListner();
+    $('#inputButton').click(function () {
+      console.log($('#characterInput').val().charCodeAt(0));
+      g_memory[g_mp] = $('#characterInput').val().charCodeAt(0);
+    });
+    g_ip++;
+    update_memview();
+    update_progview();
+    update_inputview();
+    update_outputview();
 
-  if (g_ip >= g_program.length){
-    debug_done();
-    //alert("done!");
+    if (g_ip >= g_program.length){
+      debug_done();
+    }
+  } else {
+    execute_opcode(op);
+    g_ip++;
+    update_memview();
+    update_progview();
+    update_inputview();
+    update_outputview();
+
+    if (g_ip >= g_program.length){
+      debug_done();
+    }
   }
 }
 function start_debug_run(){

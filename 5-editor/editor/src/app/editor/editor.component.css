@@ -15,16 +15,14 @@
 }
 
 .editor-output {
-  position: absolute;
+  position: relative;
   overflow: hidden;
-  padding-top: 50px;
-  border-left: 4px solid #888888;
+  padding-top: 280px;
   height: 100%;
 }
 
 .mainform {
-  overflow-y: auto;
-  height: 100%;
+  
 }
 
 .file-heading {
@@ -75,6 +73,15 @@
   bottom: 0;
   left: 0;
   font-size: 15px;
+  height: 33%;
+  border-bottom: 4px solid #888888;
+  z-index: 1;
+}
+
+.hex-editor {
+  padding-top: 50px;
+  border-left: 4px solid #888888;
+  height: 100%;
 }
 
 .run-btn {
@@ -104,7 +111,7 @@
 }
 
 .debug-buttons {
-  margin: 10px 100px 0;
+  margin: 10px 0 0 40px;
 }
 
 .debug-btn {
@@ -133,13 +140,38 @@
 }
 
 .sourse-view {
-  margin: 0 40px;
+  margin: 0 20px;
 }
 
 .output-view {
-  margin: 0 40px;
+  margin: 0 20px;
 }
 
 .memory-view {
-  margin: 0 40px;
+  margin: 0 20px;
+}
+
+.memory-number {
+  padding-top: 20px;
+}
+
+#offsetcol {
+  padding: 5px 0 0 10px;
+  font-size: 16px;
+  color: darkslategrey;
+}
+
+.column-number {
+  
+}
+
+#column-number {
+  padding: 5px;
+  font-size: 16px;
+  color: darkslategrey;
+}
+
+#hexcol {
+  font-weight: bolder;
+  color: darkslategrey;
 }

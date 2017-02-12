@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="signup">
+    <div class="card">
+      <div class="card-header">
+        <h2>Signup</h2>
+      </div>
+      <div class="card-block">
+        <form role="form" (submit)="signup($event, username.value, password.value)">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" #username class="form-control" id="username" placeholder="Username">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" #password class="form-control" id="password" placeholder="Password">
+          </div>
+          <div class="alert alert-danger" *ngIf="userExists">
+            User with this username already exists.
+          </div>
+          <div class="alert alert-danger" *ngIf="!isFull">
+            Please, fill all the filds.
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+          <a [routerLink]="['/login']">Click here to Login</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
