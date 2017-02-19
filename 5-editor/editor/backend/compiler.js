@@ -1,4 +1,4 @@
-var isDone = false;
+// var isDone = false;
 
 var g_debugging = 0;
 var g_memory = Array();
