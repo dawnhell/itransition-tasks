@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {TranslateService} from "./translate/translate.service";
+import {AuthService} from "./auth.service";
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,8 @@ import {TranslateService} from "./translate/translate.service";
 export class AppComponent {
   private isLightTheme: boolean = true;
   
-  constructor(private _translate: TranslateService) {}
+  constructor(private _translate: TranslateService,
+              private _auth: AuthService) {}
   
   ngOnInit() {
     this.selectLang('en');
@@ -29,5 +31,9 @@ export class AppComponent {
   
   selectLang(lang: string): void {
     this._translate.use(lang);
+  }
+  
+  onLogin(): void {
+    this._auth.login();
   }
 }

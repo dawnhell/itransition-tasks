@@ -1,3 +1,44 @@
 .navbar-light {
   background-color: #e3f2fd;
 }
+
+.darkTheme {
+  background: #b1b1b1;
+}
+
+.loginLinksList {
+  padding-top: 2px;
+}
+
+.loginLink {
+  text-decoration: none;
+  padding: 0 2px;
+  font-size: 22px;
+  color: #33B2D9;
+}
+
+.loginText {
+  font-size: 18px;
+}
+
+.userGreeting {
+  color: #33B2D9;
+  padding-top: 6px;
+}
+
+
+.logout {
+  position: absolute;
+  list-style: none;
+  margin: 0 auto !important;
+  border-radius: 3px;
+  background: #fff;
+}
+
+.loginLink:hover {
+  cursor: pointer;
+}
+
+.searchForm {
+  padding-left: 10px;
+}

@@ -22,7 +22,7 @@
     </a>
 
     <div class="collapse navbar-collapse" id="navbarContent">
-      <ul class="navbar-nav mr-auto">
+      <ul class="navbar-nav">
         <li class="nav-item active">
           <a class="nav-link"  routerLink="/home" routerLinkActive="active">
             {{'Главная' | translate}}
@@ -35,6 +35,15 @@
           </a>
         </li>
       </ul>
+      <form class="form-inline mr-auto searchForm">
+        <input type="text" class="form-control mr-sm-3" placeholder="{{'Поиск' | translate}}">
+        <button [class.btn-outline-info]="isLightTheme"
+                [class.btn-outline-warning]="!isLightTheme"
+                class="btn"
+                type="submit">
+          {{'Поиск' | translate}}
+        </button>
+      </form>
       <div style="padding-top: 5px;">
         <div class="btn-group mr-sm-3" data-toggle="buttons">
           <label [class.btn-outline-info]="isLightTheme"
@@ -83,20 +92,39 @@
           </label>
         </div>
       </div>
-      <form class="form-inline">
-        <input type="text" class="form-control mr-sm-3" placeholder="{{'Поиск' | translate}}">
-        <button [class.btn-outline-info]="isLightTheme"
-                [class.btn-outline-warning]="!isLightTheme"
-                class="btn"
-                type="submit">
-          {{'Поиск' | translate}}
-        </button>
-      </form>
+      <div class="loginLinksList" *ngIf="!_auth.authenticated() && !_auth.userProfile">
+        <a href="/"
+           class="loginLink"
+           (click)="onLogin()"
+           onclick="return false;">
+          <i class="fa fa-sign-in" aria-hidden="true"></i>
+          <span class="loginText">{{'Войти' | translate}}</span>
+        </a>
+      </div>
+      <div class="userGreeting" *ngIf="_auth.authenticated() && _auth.userProfile">
+        <div class="btn-group">
+          <button class="btn btn-sm dropdown-toggle"
+                  [class.btn-outline-info]="isLightTheme"
+                  [class.btn-outline-warning]="!isLightTheme"
+                  type="button"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false">
+            {{'Привет' | translate}}, {{ _auth.userProfile.name }}
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item"
+               href="/" (click)="_auth.logout()">
+              {{'Выйти' | translate}}
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </nav>
 
-<div class="container">
+<div class="container" [class.darkTheme]="!isLightTheme">
   <router-outlet></router-outlet>
 </div>
 
