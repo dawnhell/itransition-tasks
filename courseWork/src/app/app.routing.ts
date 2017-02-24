@@ -1,7 +1,6 @@
 import { Routes, RouterModule }  from "@angular/router";
 import { NgModule }              from "@angular/core";
 import { HomeComponent }         from "./home/home.component";
-import { UnauthorizedComponent } from "./unauthorized/unauthorized.component";
 
 const appRoutes: Routes = [
   {
@@ -12,10 +11,6 @@ const appRoutes: Routes = [
   {
     path: 'home',
     component: HomeComponent
-  },
-  {
-    path: 'unauthorized',
-    component: UnauthorizedComponent
   },
   {
     path: '**',

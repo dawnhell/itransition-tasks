@@ -1,7 +1,7 @@
 <nav class="navbar fixed-top navbar-toggleable-md"
-     [class.navbar-light]="isLightTheme"
-     [class.navbar-inverse]="!isLightTheme"
-     [class.bg-inverse]="!isLightTheme">
+     [class.navbar-light]="preloadSettings.isLightTheme"
+     [class.navbar-inverse]="!preloadSettings.isLightTheme"
+     [class.bg-inverse]="!preloadSettings.isLightTheme">
   <div class="container">
     <button class="navbar-toggler navbar-toggler-right"
             type="button"
@@ -37,8 +37,8 @@
       </ul>
       <form class="form-inline mr-auto searchForm">
         <input type="text" class="form-control mr-sm-3" placeholder="{{'Поиск' | translate}}">
-        <button [class.btn-outline-info]="isLightTheme"
-                [class.btn-outline-warning]="!isLightTheme"
+        <button [class.btn-outline-info]="preloadSettings.isLightTheme"
+                [class.btn-outline-warning]="!preloadSettings.isLightTheme"
                 class="btn"
                 type="submit">
           {{'Поиск' | translate}}
@@ -46,8 +46,8 @@
       </form>
       <div style="padding-top: 5px;">
         <div class="btn-group mr-sm-3" data-toggle="buttons">
-          <label [class.btn-outline-info]="isLightTheme"
-                 [class.btn-outline-warning]="!isLightTheme"
+          <label [class.btn-outline-info]="preloadSettings.isLightTheme"
+                 [class.btn-outline-warning]="!preloadSettings.isLightTheme"
                  class="btn btn-sm active"
                  (click)="changeOnLightTheme()">
             <input type="radio"
@@ -57,8 +57,8 @@
                    checked>
             {{'Светлая' | translate}}
           </label>
-          <label [class.btn-outline-info]="isLightTheme"
-                 [class.btn-outline-warning]="!isLightTheme"
+          <label [class.btn-outline-info]="preloadSettings.isLightTheme"
+                 [class.btn-outline-warning]="!preloadSettings.isLightTheme"
                  class="btn btn-sm"
                  (click)="changeOnDarkTheme()">
             <input type="radio"
@@ -69,8 +69,8 @@
           </label>
         </div>
         <div class="btn-group mr-sm-3" data-toggle="buttons">
-          <label [class.btn-outline-info]="isLightTheme"
-                 [class.btn-outline-warning]="!isLightTheme"
+          <label [class.btn-outline-info]="preloadSettings.isLightTheme"
+                 [class.btn-outline-warning]="!preloadSettings.isLightTheme"
                  class="btn btn-sm"
                  (click)="selectLang('ru')">
             <input type="radio"
@@ -80,8 +80,8 @@
                    checked>
             RU
           </label>
-          <label [class.btn-outline-info]="isLightTheme"
-                 [class.btn-outline-warning]="!isLightTheme"
+          <label [class.btn-outline-info]="preloadSettings.isLightTheme"
+                 [class.btn-outline-warning]="!preloadSettings.isLightTheme"
                  class="btn btn-sm active"
                  (click)="selectLang('en')">
             <input type="radio"
@@ -92,20 +92,22 @@
           </label>
         </div>
       </div>
-      <div class="loginLinksList" *ngIf="!_auth.authenticated() && !_auth.userProfile">
+      <div class="loginLinksList" *ngIf="!_auth.authenticated()">
         <a href="/"
            class="loginLink"
+           [class.lightLink]="preloadSettings.isLightTheme"
+           [class.darkLink]="!preloadSettings.isLightTheme"
            (click)="onLogin()"
            onclick="return false;">
           <i class="fa fa-sign-in" aria-hidden="true"></i>
           <span class="loginText">{{'Войти' | translate}}</span>
         </a>
       </div>
-      <div class="userGreeting" *ngIf="_auth.authenticated() && _auth.userProfile">
+      <div class="userGreeting" *ngIf="_auth.authenticated()">
         <div class="btn-group">
           <button class="btn btn-sm dropdown-toggle"
-                  [class.btn-outline-info]="isLightTheme"
-                  [class.btn-outline-warning]="!isLightTheme"
+                  [class.btn-outline-info]="preloadSettings.isLightTheme"
+                  [class.btn-outline-warning]="!preloadSettings.isLightTheme"
                   type="button"
                   data-toggle="dropdown"
                   aria-haspopup="true"
@@ -124,7 +126,7 @@
   </div>
 </nav>
 
-<div class="container" [class.darkTheme]="!isLightTheme">
+<div class="container" [class.darkTheme]="!preloadSettings.isLightTheme">
   <router-outlet></router-outlet>
 </div>
 

@@ -9,7 +9,6 @@ import { RoutingModule }         from "./app.routing";
 import { TRANSLATION_PROVIDERS } from "./translate/translations";
 import { TranslateService }      from "./translate/translate.service";
 import { TranslatePipe }         from "./translate/translate.pipe";
-import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { AuthService }           from "./auth.service";
 
 @NgModule({
@@ -22,13 +21,12 @@ import { AuthService }           from "./auth.service";
   declarations: [
     AppComponent,
     HomeComponent,
-    TranslatePipe,
-    UnauthorizedComponent
+    TranslatePipe
   ],
   providers: [
+    AuthService,
     TRANSLATION_PROVIDERS,
-    TranslateService,
-    AuthService
+    TranslateService
   ],
   bootstrap: [AppComponent]
 })
