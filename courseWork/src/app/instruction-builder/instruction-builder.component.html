@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="instruction-builder">
+    <div class="inctruction-builder__heading">
+      <h3>Welcome to the instruction builder</h3>
+    </div>
+    <div class="instruction-builder__content">
+      <div class="instruction-common row justify-content-md-center">
+        <form class="col-5">
+          <div class="form-group row">
+            <label for="instruction-title" class="col-3 col-form-label">Title</label>
+            <div class="col-8">
+              <input type="text" class="form-control" id="instruction-title" placeholder="Quizzy">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="instruction-category" class="col-3 col-form-label">Category</label>
+            <div class="col-8">
+              <select class="form-control" id="instruction-category">
+                <option value="nothing" selected>Choose...</option>
+                <option value="computers">Computers</option>
+                <option value="house">House</option>
+                <option value="auto">Auto</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="tag-input" class="col-3 col-form-label">Tags</label>
+            <div class="col-8" id="tag-input">
+              <dx-tag-box [items]="simpleProducts"
+                          [searchEnabled]="true">
+              </dx-tag-box>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="instruction-about" class="col-11 col-form-label">Describe your instruction</label>
+            <div class="col-11">
+              <textarea class="form-control"
+                        id="instruction-about"
+                        rows="3">
+              </textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="instruction-steps">
+
+      </div>
+      <div class="add-item">
+        <span class="add-item__title">Add steps:</span>
+        <button class="btn btn-primary btn-circle btn-lg">
+          <i class="fa fa-plus" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

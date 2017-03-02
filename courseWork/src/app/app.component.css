@@ -27,11 +27,11 @@
 }
 
 .lightLink{
-  
+  color: #33B2D9;
 }
 
 .darkLink {
-  
+  color: white;
 }
 
 .logout {
@@ -49,3 +49,4 @@
 .searchForm {
   padding-left: 10px;
 }
+

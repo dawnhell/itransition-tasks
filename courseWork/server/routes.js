@@ -60,8 +60,6 @@ router.get('/get/settings', function(req, res) {
         console.log(err);
       } else {
         var obj = JSON.parse(data);
-        console.log(obj);
-
         res.send(obj);
       }
     });
@@ -80,7 +78,9 @@ router.post('/set/settings', function(req, res) {
         console.log(err);
       } else {
         var json = JSON.stringify(settings);
-        fs.writeFile(__dirname + '/preloadSettings.json', json, 'utf8');
+        fs.writeFile(__dirname + '/preloadSettings.json', json, 'utf8', function() {
+          console.log("Settings were saved.");
+        });
 
         res.send();
       }

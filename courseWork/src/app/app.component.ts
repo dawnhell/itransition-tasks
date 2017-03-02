@@ -3,12 +3,14 @@ import { TranslateService } from "./translate/translate.service";
 import { AuthService }      from "./auth.service";
 import { Http }             from "@angular/http";
 import { contentHeaders }   from "./common/headers";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
   private preloadSettings: any = {
     lang: 'en',
@@ -17,14 +19,14 @@ export class AppComponent {
   
   constructor(private _translate: TranslateService,
               private _auth: AuthService,
-              private _http: Http) {}
+              private _http: Http,
+              private _router: Router) {}
   
   ngOnInit() {
     this._http.get('http://localhost:3131/user/get/settings',  { headers: contentHeaders })
       .subscribe(
         data => {
           this.preloadSettings = data.json();
-          console.log(this.preloadSettings);
           this.selectLang(this.preloadSettings.lang);
         },
         error => console.log(error)
@@ -37,7 +39,7 @@ export class AppComponent {
   
       this._http.post('http://localhost:3131/user/set/settings', this.preloadSettings,  { headers: contentHeaders })
       .subscribe(
-        data => console.log(data.statusText),
+        data => console.log(data.statusText + " Settings were saved."),
         error => console.log(error)
       );
     }
@@ -49,7 +51,7 @@ export class AppComponent {
   
       this._http.post('http://localhost:3131/user/set/settings', this.preloadSettings,  { headers: contentHeaders })
       .subscribe(
-        data => console.log(data.statusText),
+        data => console.log(data.statusText + " Settings were saved."),
         error => console.log(error)
       );
     }
@@ -61,7 +63,7 @@ export class AppComponent {
   
     this._http.post('http://localhost:3131/user/set/settings', this.preloadSettings,  { headers: contentHeaders })
     .subscribe(
-      data => console.log(data.statusText),
+      data => console.log(data.statusText + " Settings were saved."),
       error => console.log(error)
     );
   }

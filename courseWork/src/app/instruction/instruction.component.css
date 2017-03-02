@@ -1,0 +1,36 @@
+.instructions {
+  margin: 60px auto;
+}
+
+.personal-instructions {
+  
+}
+
+.personal-instructions__heading {
+  padding: 10px 0;
+  text-align: center;
+}
+
+.no-personal-instructions {
+  padding: 10px;
+}
+
+.no-personal-instructions__heading {
+  text-align: center;
+  font-size: 24px;
+  color: #b1b1b1;
+}
+
+.add-instruction {
+  margin: 15px;
+  text-align: center;
+}
+
+.add-instruction__title {
+  font-size: 20px;
+}
+
+.add-instruction__button {
+  margin: 0 5px;
+  font-size: 16px;
+}

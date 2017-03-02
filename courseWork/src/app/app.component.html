@@ -23,15 +23,15 @@
 
     <div class="collapse navbar-collapse" id="navbarContent">
       <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link"  routerLink="/home" routerLinkActive="active">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/home" routerLinkActive="active">
             {{'Главная' | translate}}
             <span class="sr-only">(current)</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">
-            {{'Ссылка' | translate}}
+          <a class="nav-link" routerLink="/instruction" routerLinkActive="active">
+            {{'Мои инструкции' | translate}}
           </a>
         </li>
       </ul>
@@ -48,7 +48,8 @@
         <div class="btn-group mr-sm-3" data-toggle="buttons">
           <label [class.btn-outline-info]="preloadSettings.isLightTheme"
                  [class.btn-outline-warning]="!preloadSettings.isLightTheme"
-                 class="btn btn-sm active"
+                 [class.active]="preloadSettings.isLightTheme"
+                 class="btn btn-sm"
                  (click)="changeOnLightTheme()">
             <input type="radio"
                    name="options"
@@ -59,6 +60,7 @@
           </label>
           <label [class.btn-outline-info]="preloadSettings.isLightTheme"
                  [class.btn-outline-warning]="!preloadSettings.isLightTheme"
+                 [class.active]="!preloadSettings.isLightTheme"
                  class="btn btn-sm"
                  (click)="changeOnDarkTheme()">
             <input type="radio"
@@ -71,6 +73,7 @@
         <div class="btn-group mr-sm-3" data-toggle="buttons">
           <label [class.btn-outline-info]="preloadSettings.isLightTheme"
                  [class.btn-outline-warning]="!preloadSettings.isLightTheme"
+                 [class.active]="preloadSettings.lang === 'ru'"
                  class="btn btn-sm"
                  (click)="selectLang('ru')">
             <input type="radio"
@@ -82,7 +85,8 @@
           </label>
           <label [class.btn-outline-info]="preloadSettings.isLightTheme"
                  [class.btn-outline-warning]="!preloadSettings.isLightTheme"
-                 class="btn btn-sm active"
+                 [class.active]="preloadSettings.lang === 'en'"
+                 class="btn btn-sm"
                  (click)="selectLang('en')">
             <input type="radio"
                    name="options"
@@ -97,7 +101,7 @@
            class="loginLink"
            [class.lightLink]="preloadSettings.isLightTheme"
            [class.darkLink]="!preloadSettings.isLightTheme"
-           (click)="onLogin()"
+           (click)="onLogin('/home')"
            onclick="return false;">
           <i class="fa fa-sign-in" aria-hidden="true"></i>
           <span class="loginText">{{'Войти' | translate}}</span>
@@ -112,7 +116,7 @@
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false">
-            {{'Привет' | translate}}, {{ _auth.userProfile.name }}
+            {{ _auth.userProfile.name }}
           </button>
           <div class="dropdown-menu">
             <a class="dropdown-item"
@@ -126,7 +130,7 @@
   </div>
 </nav>
 
-<div class="container" [class.darkTheme]="!preloadSettings.isLightTheme">
+<div class="container-fluid" [class.darkTheme]="!preloadSettings.isLightTheme">
   <router-outlet></router-outlet>
 </div>
 

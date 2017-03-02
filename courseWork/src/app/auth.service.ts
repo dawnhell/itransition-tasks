@@ -9,17 +9,16 @@ declare var Auth0Lock: any;
 @Injectable()
 export class AuthService {
   private lock = new Auth0Lock('GdCxlPRC07y0rIWB3ysONpu8ohi17ASt', 'itraauthsite.eu.auth0.com', {});
-  public userProfile: Object = null;
+  public userProfile: Object = {};
   
   constructor(private _router: Router,
               private _http: Http) {
-    this.userProfile = JSON.parse(localStorage.getItem('profile'));
+    this.userProfile = JSON.parse(localStorage.getItem('profile')) ? JSON.parse(localStorage.getItem('profile')) : {};
     
     this.lock.on("authenticated", (authResult) => {
       localStorage.setItem('id_token', authResult.idToken);
       
       this.lock.getProfile(authResult.idToken, (error, profile) => {
-        console.log(profile);
         if(error) {
           console.log(error);
           return;
