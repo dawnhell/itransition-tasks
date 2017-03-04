@@ -15,8 +15,8 @@ import { InstructionComponent }               from './instruction/instruction.co
 import { AuthGuard }                          from './auth-guard.service';
 import { InstructionBuilderComponent }        from './instruction-builder/instruction-builder.component';
 import { InstructionBuilderSectionComponent } from './instruction-builder/instruction-builder.section.component';
-// import { TagInputModule }                     from 'ng2-tag-input';
 import { DxTemplateModule, DxTagBoxModule }   from 'devextreme-angular';
+import { DragulaModule }                      from 'ng2-dragula';
 
 @NgModule({
   imports: [
@@ -27,7 +27,8 @@ import { DxTemplateModule, DxTagBoxModule }   from 'devextreme-angular';
     HttpModule,
     RoutingModule,
     DxTemplateModule,
-    DxTagBoxModule
+    DxTagBoxModule,
+    DragulaModule
   ],
   declarations: [
     AppComponent,

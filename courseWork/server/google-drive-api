@@ -1,113 +1,25 @@
-const express = require("express");
-const fs      = require("fs");
-const mysql   = require("mysql");
-const router  = express.Router();
+var fs = require('fs');
+var readline = require('readline');
+var google = require('googleapis');
+var googleAuth = require('google-auth-library');
 
-const readline = require('readline');
-const google = require('googleapis');
-const googleAuth = require('google-auth-library');
-
-const connection = mysql.createConnection({
-  host     : 'localhost',
-  user     : 'root',
-  password : 'root',
-  database : 'itraCourse'
-});
-connection.connect();
-
-router.get('/get', function(req, res) {
-
-  res.send("not");
-});
-
-function getUserList() {
-  return new Promise(function(resolve, reject) {
-    connection.query('SELECT id, name, role, user_id FROM USER;', function (err, rows) {
-      if (err) {
-        console.log(err);
-      }
-      resolve(rows);
-    })
-  });
-}
-
-router.post('/add', function(req, res) {
-  var user = {
-    name: req.body.name,
-    role: 'user',
-    user_id: req.body.user_id
-  };
-
-  getUserList().then(function(res) {
-    var index = res.findIndex(function(obj) {
-      return obj.user_id == user.user_id;
-    });
-
-    if(index === -1) {
-      connection.query('INSERT INTO USER SET ? ', user, function(err, res) {
-        if(err) {
-          console.log(err);
-        }
-        console.log("User has been added.");
-      });
-    }
-  });
-
-  res.send("added");
-});
-
-router.get('/get/settings', function(req, res) {
-  fs.readFile(__dirname + '/preloadSettings.json',
-    'utf8',
-    function (err, data){
-      if (err){
-        console.log(err);
-      } else {
-        var obj = JSON.parse(data);
-        res.send(obj);
-      }
-    });
-});
-
-router.post('/set/settings', function(req, res) {
-  var settings = {
-    lang: req.body.lang,
-    isLightTheme: req.body.isLightTheme
-  };
-
-  fs.readFile(__dirname + '/preloadSettings.json',
-    'utf8',
-    function (err, data){
-      if (err){
-        console.log(err);
-      } else {
-        var json = JSON.stringify(settings);
-        fs.writeFile(__dirname + '/preloadSettings.json', json, 'utf8', function() {
-          console.log("Settings were saved.");
-        });
-
-        res.send();
-      }
-    });
-});
-
-/*
-* Google Drive api
-* START
-*/
+// If modifying these scopes, delete your previously saved credentials
+// at ~/.credentials/drive-nodejs-quickstart.json
 var SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'];
 var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
   process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'drive-nodejs.json';
 
 const runGoogleDrive = function() {
-  fs.readFile(TOKEN_DIR + 'client_secret.json', function processClientSecrets(err, content) {
+  // Load client secrets from a local file.
+  fs.readFile('client_secret.json', function processClientSecrets(err, content) {
     if (err) {
       console.log('Error loading client secret file: ' + err);
       return;
     }
-    var token = authorize(JSON.parse(content), listFiles);
-    return token;
+    // Authorize a client with the loaded credentials, then call the
+    // Drive API.
+    authorize(JSON.parse(content), listFiles);
   });
 }
 
@@ -131,8 +43,7 @@ function authorize(credentials, callback) {
       getNewToken(oauth2Client, callback);
     } else {
       oauth2Client.credentials = JSON.parse(token);
-      // callback(oauth2Client);
-      return oauth2Client;
+      callback(oauth2Client);
     }
   });
 }
@@ -195,7 +106,7 @@ function listFiles(auth) {
   var service = google.drive('v2');
   service.files.list({
     auth: auth,
-    maxResults: 20,
+    maxResults: 10,
   }, function(err, response) {
     if (err) {
       console.log('The API returned an error: ' + err);
@@ -205,31 +116,11 @@ function listFiles(auth) {
     if (files.length == 0) {
       console.log('No files found.');
     } else {
-      var res = {
-        files: []
-      };
-
+      console.log('Files:');
       for (var i = 0; i < files.length; i++) {
         var file = files[i];
-        if(file.title.indexOf("photo") !== -1) {
-          res.files.push(file);
-          console.log('%s (%s)', file.title, file.id);
-        }
+        console.log('%s (%s)', file.title, file.id);
       }
-
-      return res;
-      console.log(res);
     }
   });
 }
-
-/*END*/
-
-router.get('/get/photo', function(req, res) {
-  var token = runGoogleDrive();
-  var files = listFiles(token);
-  // console.log(files);
-  // res.send(files);
-});
-
-module.exports = router;

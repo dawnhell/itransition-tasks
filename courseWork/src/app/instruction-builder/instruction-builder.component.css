@@ -12,13 +12,43 @@
   margin-top: 30px;
 }
 
+.step-list {
+  margin-top: 20px;
+}
+
 .add-item {
   
 }
 
-.add-item__title {
+.no-steps {
   font-size: 24px;
-  font-weight: bold;
-  color: darkslategrey;
-  padding: 5px 10px;
+  color: #ccc;
+}
+
+.hint {
+  font-family: Comfortaa;
+  font-size: 24px;
+  font-weight: bolder;
+  color: #333;
+  text-align: center;
+}
+
+.hint__title {
+  padding: 5px 5%;
+  background: #ffbb44;
+  border-radius: 60px;
+  border: 2px solid #ffcc00;
+}
+
+.instruction-common {
+  margin-top: 15px;
+}
+
+.save-instruction {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.save-btn {
+  margin: 15px 0;
 }
