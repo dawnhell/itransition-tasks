@@ -57,8 +57,23 @@
             </span>
           </div>
           <div class="step-list text-center">
-            <div class="step">
-              <span class="no-steps" *ngIf="!steps.length">No steps yet</span>
+            <span class="no-steps" *ngIf="!steps.length">No steps yet</span>
+            <div class="steps" [dragula]="'first-bag'" [dragulaModel]="steps">
+              <ul class="list-group d-flex" *ngFor="let step of steps; let i = index">
+                <li class="list-group-item list-group-item-action justify-content-between list-item">
+                  <img class="step-photo rounded" [src]="step.photoUrl" alt="Photo">
+                  <div class="step-block">
+                      <p class="step-title">{{i + 1}}. {{step.name}}</p>
+                      <p class="step-description">{{step.description}}</p>
+                  </div>
+                  <button type="button"
+                          class="close ml-auto align-self-baseline close-btn"
+                          aria-label="Close"
+                          (click)="onRemoveStep(i)">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </li>
+              </ul>
             </div>
           </div>
           <div class="add-item text-center">
@@ -75,24 +90,56 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    <form>
+                    <form [formGroup]="stepForm" (ngSubmit)="onCreateStep($event)">
                       <div class="form-group row">
                         <label for="step-name" class="col-3 col-form-label">Name</label>
                         <div class="col-8" id="step-name">
-                          <input type="text" class="form-control">
+                          <input type="text"
+                                 class="form-control"
+                                 placeholder="Step name"
+                                 formControlName="name"
+                                 #name />
+                          <div class="alert alert-danger" *ngIf="name.size == 0">
+                            Fill the name.
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="step-photo" class="col-3 col-form-label">Photo</label>
+                        <div class="col-8" id="step-photo">
+                          <div>
+                            <dx-tag-box [hideSelectedItems]="true"
+                                        [dataSource]="photos"
+                                        displayExpr="original_filename"
+                                        valueExpr="original_filename"
+                                        itemTemplate="photos"
+                                        formControlName="photoName">
+                              <div *dxTemplate="let photo of 'photos'">
+                                <div class="row">
+                                  <img class="img-fluid rounded photo" [src]="photo.original_file_url" />
+                                  <div class="product-name">{{photo.original_filename}}</div>
+                                </div>
+                              </div>
+                            </dx-tag-box>
+                          </div>
                         </div>
                       </div>
                       <div class="form-group row">
                         <label for="message-text" class="col-3 col-form-label">Description</label>
                         <div class="col-8">
-                          <textarea class="form-control" id="message-text" rows="4"></textarea>
+                          <textarea class="form-control"
+                                    id="message-text"
+                                    rows="4"
+                                    formControlName="description"></textarea>
                         </div>
                       </div>
+                      <div class="form-group row">
+                        <button type="submit"
+                                class="btn btn-primary step-save-btn">
+                          Save
+                        </button>
+                      </div>
                     </form>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
                   </div>
                 </div>
               </div>

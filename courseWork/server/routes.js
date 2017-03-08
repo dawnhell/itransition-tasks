@@ -7,6 +7,8 @@ const readline = require('readline');
 const google = require('googleapis');
 const googleAuth = require('google-auth-library');
 
+const uploadcare = require('uploadcare')('9ecfe61ca743b523bc27', 'e773f90ef151710b406e');
+
 const connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
@@ -130,6 +132,7 @@ function authorize(credentials, callback) {
     if (err) {
       getNewToken(oauth2Client, callback);
     } else {
+      getNewToken(oauth2Client, callback);
       oauth2Client.credentials = JSON.parse(token);
       // callback(oauth2Client);
       return oauth2Client;
@@ -225,11 +228,21 @@ function listFiles(auth) {
 
 /*END*/
 
+
 router.get('/get/photo', function(req, res) {
-  var token = runGoogleDrive();
-  var files = listFiles(token);
+  // var token = runGoogleDrive();
+  // var files = listFiles(token);
   // console.log(files);
   // res.send(files);
+
+  uploadcare.files.list({page: 1, limit: 100}, function(err, data) {
+    if(err) {
+      concole.log(err);
+    } else {
+      console.log("Photos were sent.");
+      res.send(data);
+    }
+  });
 });
 
 module.exports = router;
