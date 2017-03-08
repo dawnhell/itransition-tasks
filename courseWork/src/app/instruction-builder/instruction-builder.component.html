@@ -77,11 +77,11 @@
             </div>
           </div>
           <div class="add-item text-center">
-            <button class="btn btn-primary btn-circle btn-lg" data-toggle="modal" data-target="#stepModal">
+            <button class="btn btn-primary btn-circle btn-lg add-step-btn" data-toggle="modal" data-target="#stepModal">
               <i class="fa fa-plus" aria-hidden="true"></i>
             </button>
             <div class="modal fade" id="stepModal" tabindex="-1" role="dialog" aria-labelledby="stepModalTitle" aria-hidden="true">
-              <div class="modal-dialog" role="document">
+              <div class="modal-dialog" id="new-step-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h5 class="modal-title" id="stepModalTitle">New step</h5>
@@ -90,38 +90,35 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    <form [formGroup]="stepForm" (ngSubmit)="onCreateStep($event)">
+                    <form class="step-form"
+                          [formGroup]="stepForm"
+                          (ngSubmit)="onCreateStep($event)">
                       <div class="form-group row">
                         <label for="step-name" class="col-3 col-form-label">Name</label>
                         <div class="col-8" id="step-name">
                           <input type="text"
                                  class="form-control"
                                  placeholder="Step name"
-                                 formControlName="name"
-                                 #name />
-                          <div class="alert alert-danger" *ngIf="name.size == 0">
-                            Fill the name.
-                          </div>
+                                 formControlName="name" />
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="step-photo" class="col-3 col-form-label">Photo</label>
-                        <div class="col-8" id="step-photo">
-                          <div>
-                            <dx-tag-box [hideSelectedItems]="true"
-                                        [dataSource]="photos"
-                                        displayExpr="original_filename"
-                                        valueExpr="original_filename"
-                                        itemTemplate="photos"
-                                        formControlName="photoName">
-                              <div *dxTemplate="let photo of 'photos'">
-                                <div class="row">
-                                  <img class="img-fluid rounded photo" [src]="photo.original_file_url" />
-                                  <div class="product-name">{{photo.original_filename}}</div>
-                                </div>
+                        <label for="add-step-photo" class="col-3 col-form-label">Photo</label>
+                        <div class="col-8 add-step-photo" id="add-step-photo">
+                          <dx-tag-box [hideSelectedItems]="true"
+                                      [dataSource]="photos"
+                                      displayExpr="original_filename"
+                                      valueExpr="original_filename"
+                                      itemTemplate="photos"
+                                      [multiline]="false"
+                                      formControlName="photoName" >
+                            <div *dxTemplate="let photo of 'photos'">
+                              <div class="row">
+                                <img class="img-fluid rounded photo" [src]="photo.original_file_url" />
+                                <div class="product-name">{{photo.original_filename}}</div>
                               </div>
-                            </dx-tag-box>
-                          </div>
+                            </div>
+                          </dx-tag-box>
                         </div>
                       </div>
                       <div class="form-group row">
@@ -133,9 +130,16 @@
                                     formControlName="description"></textarea>
                         </div>
                       </div>
+                      <!--<div class="alert alert-danger" *ngIf="!isStepFormValid">-->
+                        <!--Fill out the whole form.-->
+                      <!--</div>-->
                       <div class="form-group row">
                         <button type="submit"
-                                class="btn btn-primary step-save-btn">
+                                class="btn btn-primary step-save-btn"
+                                data-dismiss="modal"
+                                [disabled]="this.stepForm.value.name.length === 0 ||
+                                            this.stepForm.value.photoName.length === 0 ||
+                                            this.stepForm.value.description.length === 0">
                           Save
                         </button>
                       </div>

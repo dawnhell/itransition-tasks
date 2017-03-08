@@ -1,7 +1,7 @@
-import { Component, OnInit }                from '@angular/core';
-import {Http}                               from "@angular/http";
-import {contentHeaders}                     from "../common/headers";
-import {FormBuilder, Validators, FormGroup} from "@angular/forms";
+import { Component, OnInit }                  from '@angular/core';
+import { Http }                               from "@angular/http";
+import { FormBuilder, Validators, FormGroup } from "@angular/forms";
+import { contentHeaders }                     from "../common/headers";
 
 @Component({
   selector: 'app-instruction-builder',
@@ -16,8 +16,7 @@ export class InstructionBuilderComponent implements OnInit {
     "tag3"
   ];
   private photos = [];
-  private steps = [
-  ];
+  private steps = [];
   
   public stepForm: FormGroup;
   
@@ -56,13 +55,12 @@ export class InstructionBuilderComponent implements OnInit {
       name: this.stepForm.value.name,
       photoUrl: this.photos[
         this.photos.map(function(element) {
-                          return element.original_filename;
-                        })
-                   .indexOf(this.stepForm.value.photoName[0])]
-                   .original_file_url,
+          return element.original_filename;
+        })
+        .indexOf(this.stepForm.value.photoName[0])]
+        .original_file_url,
       description: this.stepForm.value.description
     });
-    console.log(this.steps);
   }
   
   onRemoveStep(index: number) {
