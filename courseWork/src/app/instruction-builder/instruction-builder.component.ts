@@ -1,7 +1,7 @@
 import { Component, OnInit }                  from '@angular/core';
-import { Http }                               from "@angular/http";
-import { FormBuilder, Validators, FormGroup } from "@angular/forms";
-import { contentHeaders }                     from "../common/headers";
+import { Http }                               from '@angular/http';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { contentHeaders }                     from '../common/headers';
 
 @Component({
   selector: 'app-instruction-builder',
@@ -10,19 +10,43 @@ import { contentHeaders }                     from "../common/headers";
 })
 export class InstructionBuilderComponent implements OnInit {
 
-  private simpleProducts = [
-    "tag1",
-    "tag2",
-    "tag3"
-  ];
-  private photos = [];
-  private steps = [];
+  private tags       = [];
+  private categories = [];
+  private photos     = [];
+  private steps      = [];
   
+  public commonForm: FormGroup;
   public stepForm: FormGroup;
   
   constructor(private _http: Http, private _formBuilder: FormBuilder) {
     this.getPhotoList();
+    this.createCommonForm();
     this.createStepForm();
+    this.getCategoryList();
+    this.getTagList();
+  }
+  
+  ngOnInit() {}
+  
+  getCategoryList() {
+    this._http.get('/user/get/categories', { headers: contentHeaders })
+      .subscribe(
+        data => this.categories = data.json(),
+        error => console.log(error)
+      );
+  }
+  
+  getTagList() {
+    this._http.get('/user/get/tags', { headers: contentHeaders })
+    .subscribe(
+      data => {
+        let temp = data.json();
+        for(let i = 0; i < temp.length; ++i) {
+          this.tags[i] = temp[i].name;
+        }
+      },
+      error => console.log(error)
+    );
   }
   
   getPhotoList() {
@@ -33,21 +57,21 @@ export class InstructionBuilderComponent implements OnInit {
       );
   }
   
-  createStepForm() {
-    this.stepForm = this._formBuilder.group({
-      name: ["", Validators.required],
-      photoName: ["", Validators.required],
-      description: ["", Validators.required]
+  createCommonForm() {
+    this.commonForm = this._formBuilder.group({
+      title:       ['', Validators.required],
+      category:    ['', Validators.required],
+      tag:         ['', Validators.required],
+      description: ['', Validators.required]
     });
   }
-
-  ngOnInit() {
-    this.steps.push(
-      {
-        name: "First step name",
-        photoUrl: "https://ucarecdn.com/ee2b002d-00d9-4479-b74e-36882682893a/mountain.jpg",
-        description: "This is the description"
-      });
+  
+  createStepForm() {
+    this.stepForm = this._formBuilder.group({
+      name:        ['', Validators.required],
+      photoName:   ['', Validators.required],
+      description: ['', Validators.required]
+    });
   }
   
   onCreateStep(event) {
@@ -66,5 +90,26 @@ export class InstructionBuilderComponent implements OnInit {
   onRemoveStep(index: number) {
     this.steps.splice(index, 1);
   }
-
+  
+  onCustomTagCreating(args) {
+    let newTag = args.text;
+    this.tags.unshift(newTag);
+    return newTag;
+  }
+  
+  onCreateInstruction() {
+    let instruction = {
+      name:        this.commonForm.value.title,
+      category:    this.commonForm.value.category,
+      tags:        this.commonForm.value.tag,
+      description: this.commonForm.value.description,
+      steps:       this.steps
+    };
+    
+    this._http.post('/user/add/instruction', instruction, { headers: contentHeaders })
+      .subscribe(
+        data => console.log(data),
+        error => console.log(error)
+      );
+  }
 }

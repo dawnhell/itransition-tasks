@@ -10,5 +10,6 @@ export class InstructionComponent implements OnInit {
   constructor(private _auth: AuthService) { }
 
   ngOnInit() {
+    
   }
 }

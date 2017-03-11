@@ -1,8 +1,8 @@
-import { Injectable }      from "@angular/core";
-import { tokenNotExpired } from "angular2-jwt";
-import { Router }          from "@angular/router";
-import { Http, Headers }   from "@angular/http";
-import "rxjs/add/operator/filter";
+import { Injectable }      from '@angular/core';
+import { tokenNotExpired } from 'angular2-jwt';
+import { Router }          from '@angular/router';
+import { Http, Headers }   from '@angular/http';
+import 'rxjs/add/operator/filter';
 
 declare var Auth0Lock: any;
 
@@ -15,7 +15,7 @@ export class AuthService {
               private _http: Http) {
     this.userProfile = JSON.parse(localStorage.getItem('profile')) ? JSON.parse(localStorage.getItem('profile')) : {};
     
-    this.lock.on("authenticated", (authResult) => {
+    this.lock.on('authenticated', (authResult) => {
       localStorage.setItem('id_token', authResult.idToken);
       
       this.lock.getProfile(authResult.idToken, (error, profile) => {

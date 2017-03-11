@@ -10,7 +10,6 @@ const router     = require("./routes");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded ({ extended: false }));
 app.use(express.static(path.join(__dirname, "../dist")));
-// app.use("/home", router);
 app.use("/user", router);
 
 app.get("/*", function (req, res) {

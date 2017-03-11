@@ -1,9 +1,9 @@
 import { Component }        from '@angular/core';
-import { TranslateService } from "./translate/translate.service";
-import { AuthService }      from "./auth.service";
-import { Http }             from "@angular/http";
-import { contentHeaders }   from "./common/headers";
-import {Router} from "@angular/router";
+import { Http }             from '@angular/http';
+import { Router }           from '@angular/router';
+import { AuthService }      from './auth.service';
+import { TranslateService } from './translate/translate.service';
+import { contentHeaders }   from './common/headers';
 
 @Component({
   selector: 'app-root',
@@ -39,7 +39,7 @@ export class AppComponent {
   
       this._http.post('http://localhost:3131/user/set/settings', this.preloadSettings,  { headers: contentHeaders })
       .subscribe(
-        data => console.log(data.statusText + " Settings were saved."),
+        data => console.log(data.statusText + ' Settings were saved.'),
         error => console.log(error)
       );
     }
@@ -51,7 +51,7 @@ export class AppComponent {
   
       this._http.post('http://localhost:3131/user/set/settings', this.preloadSettings,  { headers: contentHeaders })
       .subscribe(
-        data => console.log(data.statusText + " Settings were saved."),
+        data => console.log(data.statusText + ' Settings were saved.'),
         error => console.log(error)
       );
     }
@@ -63,7 +63,7 @@ export class AppComponent {
   
     this._http.post('http://localhost:3131/user/set/settings', this.preloadSettings,  { headers: contentHeaders })
     .subscribe(
-      data => console.log(data.statusText + " Settings were saved."),
+      data => console.log(data.statusText + ' Settings were saved.'),
       error => console.log(error)
     );
   }
