@@ -6,11 +6,6 @@
   
 }
 
-.personal-instructions__heading {
-  padding: 10px 0;
-  text-align: center;
-}
-
 .no-personal-instructions {
   padding: 10px;
 }
@@ -22,15 +17,35 @@
 }
 
 .add-instruction {
-  margin: 15px;
   text-align: center;
 }
 
 .add-instruction__title {
   font-size: 20px;
+  padding: 15px 0 10px;
 }
 
 .add-instruction__button {
   margin: 0 5px;
   font-size: 16px;
+}
+
+.instruction {
+  margin: 0 10px;
+}
+
+.instruction-photo {
+  height: 10rem;
+}
+
+.instruction-tags {
+  overflow: hidden;
+}
+
+.instruction-tag {
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  background: #ccc;
+  padding: 2px 3px;
+  margin: 0 3px;
 }

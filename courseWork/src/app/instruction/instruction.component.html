@@ -1,21 +1,7 @@
 <div class="container">
   <div class="instructions">
     <div class="personal-instructions">
-      <div class="personal-instructions__heading">
-        <h3>My instructions</h3>
-      </div>
       <div class="personal-instructions__content">
-        <div class="no-personal-instructions">
-          <p class="no-personal-instructions__heading">No instructions yet</p>
-        </div>
-        <div class="personal-instructions__block">
-          <div class="personal-instructions__filters">
-
-          </div>
-          <div class="personal-instructions__list">
-
-          </div>
-        </div>
         <div class="add-instruction">
           <p class="add-instruction__title">
             Have something to tell about? Click
@@ -26,6 +12,29 @@
             </button>
             to create new instruction.
           </p>
+        </div>
+        <div class="no-personal-instructions" *ngIf="!personalInstructions.length">
+          <p class="no-personal-instructions__heading">No instructions yet</p>
+        </div>
+        <div class="personal-instructions__block" *ngIf="personalInstructions.length">
+          <div class="personal-instructions__filters">
+
+          </div>
+          <div class="personal-instructions__list d-flex justify-content-center">
+            <div class="card instruction" style="width: 15rem;" *ngFor="let instruction of personalInstructions">
+              <img class="card-img-top instruction-photo" [src]="instruction.stepList[0].picture_url" alt="Instruction photo">
+              <div class="card-block">
+                <h4 class="card-title">{{instruction.name}}</h4>
+                <div class="instruction-tags">
+                  <span class="instruction-tag" *ngFor="let tag of instruction.tagList">#{{tag.name}}</span>
+                </div>
+                <span>Category:</span>
+                <span class="instruction-category">{{categories[instruction.category_id - 1].name}}</span>
+                <p>{{instruction.description}}</p>
+                <a href="#" class="btn btn-primary">Edit</a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -57,7 +57,6 @@ function getUserList() {
 }
 
 router.post('/add', function(req, res) {
-  console.log("in add");
   var user = {
     name: req.body.name,
     role: 'user',
@@ -148,7 +147,7 @@ router.get('/get/categories', function(req, res) {
   })
 });
 
-function getTags() {
+function getAvailableTags() {
   return new Promise(function(resolve, reject) {
     connection.query('SELECT id, name FROM TAG;', function (err, rows) {
       if (err) {
@@ -160,7 +159,7 @@ function getTags() {
 }
 
 router.get('/get/tags', function(req, res) {
-  getTags().then(function(result) {
+  getAvailableTags().then(function(result) {
     res.send(result);
     console.log("Tags has been sent.");
   })
@@ -219,6 +218,111 @@ router.post('/add/instruction', function(req, res) {
         res.send("added instruction");
       });
     });
+  });
+});
+
+function getInstructions(userId) {
+  return new Promise(function(resolve, reject) {
+    getCurrentUser().then(function (currentUser) {
+      connection.query("SELECT id, name, description, likes_number, user_id, category_id FROM INSTRUCTION WHERE user_id=(SELECT id FROM USER WHERE user_id='" + userId + "');",
+        function(err, rows) {
+          if(err) {
+            console.log(err);
+          }
+          resolve(rows);
+        }
+      );
+    });
+  });
+}
+
+function getInstructionTags(instructionId) {
+  return new Promise(function(resolve, reject) {
+    connection.query("SELECT id, name FROM TAG WHERE instruction_id=" + instructionId + ";",
+      function (err, rows) {
+        if(err) {
+          console.log(err);
+        }
+        resolve(rows);
+      }
+    );
+  });
+}
+
+function getInstructionSteps(instructionId) {
+  return new Promise(function(resolve, reject) {
+    connection.query("SELECT id, name, description, picture_url FROM STEP WHERE instruction_id=" + instructionId + ";",
+      function (err, rows) {
+        if(err) {
+          console.log(err);
+        }
+        resolve(rows);
+      }
+    );
+  });
+}
+
+router.post('/get/instructions', function(req, res) {
+  var instructionList = [];
+  var userId = req.body.user_id;
+
+  getInstructions(userId).then(function(instructionsResult) {
+    instructionList = instructionsResult;
+    for(var i = 0; i < instructionsResult.length; ++i) {
+      var instructionId = instructionsResult[i].id;
+      (function(instructionId, i) {
+        getInstructionTags(instructionId).then(
+          function(instructionTags) {
+            instructionList[i].tagList = instructionTags;
+            getInstructionSteps(instructionId).then(function (instructionSteps) {
+              instructionList[i].stepList = instructionSteps;
+              if(i == instructionsResult.length - 1) {
+                res.send({ instructions: instructionList });
+              }
+            });
+          }
+        );
+      })(instructionId, i);
+    }
+  });
+});
+
+function getAllInstructions() {
+  return new Promise(function(resolve, reject) {
+    getCurrentUser().then(function (currentUser) {
+      connection.query("SELECT id, name, description, likes_number, user_id, category_id FROM INSTRUCTION;",
+        function(err, rows) {
+          if(err) {
+            console.log(err);
+          }
+          resolve(rows);
+        }
+      );
+    });
+  });
+}
+
+router.get('/get/instructions', function(req, res) {
+  var instructionList = [];
+
+  getAllInstructions().then(function(instructionsResult) {
+    instructionList = instructionsResult;
+    for(var i = 0; i < instructionsResult.length; ++i) {
+      var instructionId = instructionsResult[i].id;
+      (function(instructionId, i) {
+        getInstructionTags(instructionId).then(
+          function(instructionTags) {
+            instructionList[i].tagList = instructionTags;
+            getInstructionSteps(instructionId).then(function (instructionSteps) {
+              instructionList[i].stepList = instructionSteps;
+              if(i == instructionsResult.length - 1) {
+                res.send({ instructions: instructionList });
+              }
+            });
+          }
+        );
+      })(instructionId, i);
+    }
   });
 });
 

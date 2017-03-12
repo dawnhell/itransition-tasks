@@ -26,10 +26,16 @@ export class InstructionBuilderComponent implements OnInit {
     this.getTagList();
   }
   
-  ngOnInit() {}
+  ngOnInit() {
+    this.getPhotoList();
+    this.createCommonForm();
+    this.createStepForm();
+    this.getCategoryList();
+    this.getTagList();
+  }
   
   getCategoryList() {
-    this._http.get('/user/get/categories', { headers: contentHeaders })
+    this._http.get('http://localhost:3131/user/get/categories', { headers: contentHeaders })
       .subscribe(
         data => this.categories = data.json(),
         error => console.log(error)
@@ -50,7 +56,7 @@ export class InstructionBuilderComponent implements OnInit {
   }
   
   getPhotoList() {
-    this._http.get('user/get/photo', { headers: contentHeaders })
+    this._http.get('http://localhost:3131/user/get/photo', { headers: contentHeaders })
       .subscribe(
         data => this.photos = data.json().results,
         error => console.log(error)
@@ -106,7 +112,7 @@ export class InstructionBuilderComponent implements OnInit {
       steps:       this.steps
     };
     
-    this._http.post('/user/add/instruction', instruction, { headers: contentHeaders })
+    this._http.post('http://localhost:3131/user/add/instruction', instruction, { headers: contentHeaders })
       .subscribe(
         data => console.log(data),
         error => console.log(error)

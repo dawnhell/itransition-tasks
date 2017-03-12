@@ -1,3 +1,49 @@
-<div class="container">
+<div class="container home">
+  <div class="home-title">
+    <p class="home-title__heading">Random instructions</p>
+  </div>
+  <div class="d-flex justify-content-center">
+    <div id="instructionCarousel" class="carousel slide" data-ride="carousel">
+      <ol class="carousel-indicators">
+        <li data-target="#instructionCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#instructionCarousel" data-slide-to="1"></li>
+        <li data-target="#instructionCarousel" data-slide-to="2"></li>
+      </ol>
+      <div class="carousel-inner" role="listbox">
+        <div class="carousel-item"
+             *ngFor="let instruction of randomInstructionsList; let i = index"
+             [class.active]="i == 1">
+          <img class="d-block img-fluid carousel-photo" [src]="instruction.stepList[0].picture_url" alt="Instruction photo">
+          <div class="carousel-caption d-none d-md-block">
+            <h3>{{instruction.name}}</h3>
+            <p>{{instruction.description}}</p>
+          </div>
+        </div>
+      </div>
+      <a class="carousel-control-prev" href="#instructionCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#instructionCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
 
+    </div>
+    <div class="col-6">
+      <div class="tag-cloud">
+        <p>Tag cloud</p>
+        <angular-tag-cloud
+             [data]="data"
+             [width]="options.width"
+             [height]="options.height"
+             [overflow]="options.overflow">
+        </angular-tag-cloud>
+      </div>
+    </div>
+  </div>
 </div>

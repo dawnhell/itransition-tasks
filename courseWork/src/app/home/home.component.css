@@ -1,0 +1,21 @@
+.home {
+  margin-top: 50px;
+}
+
+.home-title {
+  margin-top: 10px;
+  text-align: center;
+  text-shadow: 1px 2px #ddd;
+  color: #444;
+  font-size: 28px;
+  font-family: "Courier 10 Pitch", sans-serif;
+}
+
+.carousel-photo {
+  height: 30rem;
+  width: 50rem;
+}
+
+.carousel-caption {
+  text-shadow: 1px 1px #333;
+}

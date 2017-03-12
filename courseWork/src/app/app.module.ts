@@ -17,6 +17,7 @@ import { InstructionBuilderComponent }        from './instruction-builder/instru
 import { InstructionBuilderSectionComponent } from './instruction-builder/instruction-builder.section.component';
 import { DxTemplateModule, DxTagBoxModule }   from 'devextreme-angular';
 import { DragulaModule }                      from 'ng2-dragula';
+import { TagCloudModule }                     from 'angular-tag-cloud-module';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { DragulaModule }                      from 'ng2-dragula';
     RoutingModule,
     DxTemplateModule,
     DxTagBoxModule,
-    DragulaModule
+    DragulaModule,
+    TagCloudModule
   ],
   declarations: [
     AppComponent,
