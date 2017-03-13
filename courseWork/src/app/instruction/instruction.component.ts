@@ -9,6 +9,11 @@ import { contentHeaders }    from '../common/headers';
   styleUrls: ['./instruction.component.css']
 })
 export class InstructionComponent implements OnInit {
+  private preloadSettings: any = {
+    lang: 'en',
+    isLightTheme: true
+  };
+  
   private personalInstructions: Array<Object> = [];
   private categories: Array<string> = [];
   
@@ -16,6 +21,14 @@ export class InstructionComponent implements OnInit {
               private _http: Http) { }
 
   ngOnInit() {
+    this._http.get('http://localhost:3131/user/get/settings',  { headers: contentHeaders })
+    .subscribe(
+      data => {
+        this.preloadSettings = data.json();
+      },
+      error => console.log(error)
+    );
+    
     let currentUser = this._auth.userProfile;
     
     this._http.get('http://localhost:3131/user/get/categories', { headers: contentHeaders })

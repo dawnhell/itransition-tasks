@@ -4,17 +4,17 @@
       <div class="personal-instructions__content">
         <div class="add-instruction">
           <p class="add-instruction__title">
-            Have something to tell about? Click
+            {{'Хотите чем-то поделиться. Нажмите' | translate}}
             <button class="add-instruction__button btn btn-info"
                     routerLink="/instruction/builder">
               <i class="fa fa-plus" aria-hidden="true"></i>
-              Add
+              {{'Добавить' | translate}}
             </button>
-            to create new instruction.
+            {{'чтобы создать новую инструкцию' | translate}}.
           </p>
         </div>
         <div class="no-personal-instructions" *ngIf="!personalInstructions.length">
-          <p class="no-personal-instructions__heading">No instructions yet</p>
+          <p class="no-personal-instructions__heading">{{'Пока нет инструкций'| translate}}</p>
         </div>
         <div class="personal-instructions__block" *ngIf="personalInstructions.length">
           <div class="personal-instructions__filters">
@@ -28,10 +28,10 @@
                 <div class="instruction-tags">
                   <span class="instruction-tag" *ngFor="let tag of instruction.tagList">#{{tag.name}}</span>
                 </div>
-                <span>Category:</span>
+                <span>{{'Категория'| translate}}:</span>
                 <span class="instruction-category">{{categories[instruction.category_id - 1].name}}</span>
                 <p>{{instruction.description}}</p>
-                <a href="#" class="btn btn-primary">Edit</a>
+                <a href="#" class="btn btn-primary">{{'Изменить' | translate}}</a>
               </div>
             </div>
           </div>

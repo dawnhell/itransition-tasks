@@ -1,20 +1,20 @@
 <div class="container">
   <div class="instruction-builder">
     <div class="inctruction-builder__heading">
-      <h3>Welcome to the instruction builder</h3>
+      <h3>{{'Приветствуем в генераторе инструкций' | translate}}</h3>
     </div>
     <div class="instruction-builder__content">
       <div class="row">
         <div class="col">
           <div class="hint">
             <span class="hint__title">
-              1. Fill the common info
+              1. {{'Заполните общую информацию'| translate}}
             </span>
           </div>
           <div class="instruction-common">
             <form [formGroup]="commonForm">
               <div class="form-group row">
-                <label for="instruction-title" class="col-3 col-form-label">Title</label>
+                <label for="instruction-title" class="col-3 col-form-label">{{'Название'| translate}}</label>
                 <div class="col-8">
                   <input type="text"
                          class="form-control"
@@ -24,7 +24,7 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label for="instruction-category" class="col-3 col-form-label">Category</label>
+                <label for="instruction-category" class="col-3 col-form-label">{{'Категория'| translate}}</label>
                 <div class="col-8">
                   <select class="form-control"
                           id="instruction-category"
@@ -38,18 +38,19 @@
                 </div>
               </div>
               <div class="form-group row">
-                <label for="tag-input" class="col-3 col-form-label">Tags</label>
+                <label for="tag-input" class="col-3 col-form-label">{{'Теги'| translate}}</label>
                 <div class="col-8" id="tag-input">
                   <dx-tag-box [items]="tags"
                               [searchEnabled]="true"
                               [acceptCustomValue]="true"
+                              placeholder="{{'Выбрать'| translate}}"
                               (onCustomItemCreating)="onCustomTagCreating($event)"
                               formControlName="tag">
                   </dx-tag-box>
                 </div>
               </div>
               <div class="form-group row">
-                <label for="instruction-about" class="col-11 col-form-label">Describe your instruction</label>
+                <label for="instruction-about" class="col-11 col-form-label">{{'Опишите вашу инструкцию'| translate}}</label>
                 <div class="col-11">
               <textarea class="form-control"
                         id="instruction-about"
@@ -64,11 +65,14 @@
         <div class="col">
           <div class="hint">
             <span class="hint__title">
-              2. Add steps to your instruction
+              2. {{'Добавите шаги к инструкции'| translate}}
             </span>
           </div>
+          <div class="hint">
+            <span style="font-size: 14px;">{{'P.S: Можно менять порядок'| translate}}</span>
+          </div>
           <div class="step-list text-center">
-            <span class="no-steps" *ngIf="!steps.length">No steps yet</span>
+            <span class="no-steps" *ngIf="!steps.length">{{'Пока нет шагов'| translate}}</span>
             <div class="steps" [dragula]="'first-bag'" [dragulaModel]="steps">
               <ul class="list-group d-flex" *ngFor="let step of steps; let i = index">
                 <li class="list-group-item list-group-item-action justify-content-between list-item">
@@ -88,14 +92,18 @@
             </div>
           </div>
           <div class="add-item text-center">
-            <button class="btn btn-primary btn-circle btn-lg add-step-btn" data-toggle="modal" data-target="#stepModal">
+            <button class="btn btn-circle btn-lg add-step-btn"
+                    [class.btn-primary]="preloadSettings.isLightTheme"
+                    [class.btn-warning]="!preloadSettings.isLightTheme"
+                    data-toggle="modal"
+                    data-target="#stepModal">
               <i class="fa fa-plus" aria-hidden="true"></i>
             </button>
             <div class="modal fade" id="stepModal" tabindex="-1" role="dialog" aria-labelledby="stepModalTitle" aria-hidden="true">
               <div class="modal-dialog" id="new-step-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h5 class="modal-title" id="stepModalTitle">New step</h5>
+                    <h5 class="modal-title" id="stepModalTitle">{{'Новый шаг'| translate}}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
@@ -105,16 +113,16 @@
                           [formGroup]="stepForm"
                           (ngSubmit)="onCreateStep($event)">
                       <div class="form-group row">
-                        <label for="step-name" class="col-3 col-form-label">Name</label>
+                        <label for="step-name" class="col-3 col-form-label">{{'Имя'| translate}}</label>
                         <div class="col-8" id="step-name">
                           <input type="text"
                                  class="form-control"
-                                 placeholder="Step name"
+                                 placeholder="{{'Имя шага'| translate}}"
                                  formControlName="name" />
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="add-step-photo" class="col-3 col-form-label">Photo</label>
+                        <label for="add-step-photo" class="col-3 col-form-label">{{'Фото'| translate}}</label>
                         <div class="col-8 add-step-photo" id="add-step-photo">
                           <dx-tag-box [hideSelectedItems]="true"
                                       [dataSource]="photos"
@@ -133,7 +141,7 @@
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="message-text" class="col-3 col-form-label">Description</label>
+                        <label for="message-text" class="col-3 col-form-label">{{'Описание'| translate}}</label>
                         <div class="col-8">
                           <textarea class="form-control"
                                     id="message-text"
@@ -146,8 +154,10 @@
                                 class="btn btn-primary step-save-btn"
                                 [disabled]="this.stepForm.value.name.length === 0 ||
                                             this.stepForm.value.photoName.length === 0 ||
-                                            this.stepForm.value.description.length === 0">
-                          Save
+                                            this.stepForm.value.description.length === 0"
+                                data-dismiss="modal"
+                                (click)="onCreateStep($event)">
+                          {{'Сохранить'| translate}}
                         </button>
                       </div>
                     </form>
@@ -161,18 +171,20 @@
       <div class="save-instruction">
         <div class="hint">
             <span class="hint__title">
-              3. Save your instruction
+              3. {{'Сохраните вашу инструкцию'| translate}}
             </span>
         </div>
         <div class="save-btn">
-          <button class="btn btn-outline-primary btn-lg"
+          <button class="btn btn-lg"
                   [disabled]="this.commonForm.value.title.length == 0 ||
                               this.commonForm.value.category.length == 0 ||
                               this.commonForm.value.tag.length == 0 ||
                               this.commonForm.value.description.length == 0"
+                  [class.btn-outline-primary]="preloadSettings.isLightTheme"
+                  [class.btn-outline-warning]="!preloadSettings.isLightTheme"
                   (click)="onCreateInstruction()"
                   routerLink="/instruction">
-            SAVE
+            {{'СОХРАНИТЬ'| translate}}
           </button>
         </div>
       </div>

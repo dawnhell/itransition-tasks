@@ -9,6 +9,10 @@ import { contentHeaders }                     from '../common/headers';
   styleUrls: ['./instruction-builder.component.css']
 })
 export class InstructionBuilderComponent implements OnInit {
+  private preloadSettings: any = {
+    lang: 'en',
+    isLightTheme: true
+  };
 
   private tags       = [];
   private categories = [];
@@ -27,6 +31,14 @@ export class InstructionBuilderComponent implements OnInit {
   }
   
   ngOnInit() {
+    this._http.get('http://localhost:3131/user/get/settings',  { headers: contentHeaders })
+    .subscribe(
+      data => {
+        this.preloadSettings = data.json();
+      },
+      error => console.log(error)
+    );
+    
     this.getPhotoList();
     this.createCommonForm();
     this.createStepForm();
@@ -91,6 +103,10 @@ export class InstructionBuilderComponent implements OnInit {
         .original_file_url,
       description: this.stepForm.value.description
     });
+    
+    // this.stepForm.value.name = "";
+    // this.stepForm.value.photoName = "";
+    // this.stepForm.value.description = "";
   }
   
   onRemoveStep(index: number) {

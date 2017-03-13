@@ -1,7 +1,7 @@
-import { Component, OnInit }       from '@angular/core';
-import { Http }                    from '@angular/http';
-import { contentHeaders }          from '../common/headers';
-import { CloudOptions, CloudData } from 'angular-tag-cloud-module';
+import { Component, OnInit, Input }       from '@angular/core';
+import { Http }                           from '@angular/http';
+import { contentHeaders }                 from '../common/headers';
+import { CloudOptions, CloudData }        from 'angular-tag-cloud-module';
 
 @Component({
   selector: 'app-home',
@@ -9,6 +9,16 @@ import { CloudOptions, CloudData } from 'angular-tag-cloud-module';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  @Input('preload')
+  set updateInternalVal(preload) {
+    this.preloadSettings = preload;
+  }
+  
+  private preloadSettings: any = {
+    lang: 'en',
+    isLightTheme: true
+  };
+  
   private instructionsList: Array<Object> = [];
   private randomInstructionsList: Array<Object> = [];
   
@@ -24,8 +34,17 @@ export class HomeComponent implements OnInit {
   ];
 
   constructor(private _http: Http) { }
-
+  
   ngOnInit() {
+    this._http.get('http://localhost:3131/user/get/settings',  { headers: contentHeaders })
+    .subscribe(
+      data => {
+        this.preloadSettings = data.json();
+      },
+      error => console.log(error)
+    );
+    
+    
     this._http.get('http://localhost:3131/user/get/instructions', { headers: contentHeaders })
     .subscribe(
       data => {
@@ -38,5 +57,4 @@ export class HomeComponent implements OnInit {
       error => console.log(error)
     );
   }
-
 }
